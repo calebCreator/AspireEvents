@@ -1,0 +1,10 @@
+1. Make sure your spreadsheet is a google sheet and not an excel spreadsheet
+2. Click on "Extensions"
+3. Click on "Apps Script"
+4. Write your code
+5. Click "Deploy" in the top right
+6. Deploy as a web app
+7. Set execute as to "me(email.email@gmail.com)"
+8. Set who has access to "anyone"
+9. Go to "Manage Deployments" under "Deploy" and copy the web app url
+10. Use this in your program

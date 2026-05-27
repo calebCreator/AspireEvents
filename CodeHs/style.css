@@ -1,0 +1,108 @@
+.red {
+    background-color:red;
+}
+
+.blue {
+    background-color:blue;
+}
+
+#bgimage {
+    background-image:url(https://codehs.com/uploads/ae8e5558ba150dd509ff05a0f9ab2535);
+    background-size:cover ;
+}
+
+tr:nth-child(odd) {
+    background-color:rgba(100,100,100,0.1);
+}
+
+
+th {
+    background-color:lightgrey;
+}
+
+body {
+    background-color:white;
+    font-family:Helvetica;
+}
+
+div.navbar {
+    background-color:#2010b0; 
+    margin:-8px;
+    color:white;
+    height:120px;
+
+}
+
+div a.link {
+    
+    color:white;
+    margin-left:100px;
+    margin-bottom:0px;
+    font-size:25px;
+    font-family:Courier;
+    font-weight:bold;
+}
+
+a + a {
+    margin-left:50px;
+}
+
+#logo {
+    height:100px;
+    display:inline;
+}
+
+#bracket {
+    width:300px;
+}
+
+table {
+    width:90vw;
+    
+    font-size:20px;
+    border-collapse:collapse;
+}
+
+th, td {
+    text-align:center;
+}
+
+#home {
+    background-color:lightgray;
+    margin-top:25px;
+    margin-bottom:0px;
+    width:90vw;
+    display:flex;
+}
+
+#AELogo, #name {
+    display:flex;
+    font-size:120px;
+    font-family: fantasy;
+
+}
+
+#presenter {
+    font-size: 40px;
+    font-weight:normal;
+    font-family:helvetica;
+    padding-top:25px;
+    padding-left:10px;
+
+}
+
+hr {
+    border-width:10px;
+    margin-top:0px;
+    margin-bottom:0px;
+}
+
+#about {
+    background-color:lightgray;
+    width:800px;
+    padding:5px 15px 5px 15px;
+    margin:10px;
+    margin-top: 25px;
+    margin-bottom:25px;
+    font-family: Arial;
+}

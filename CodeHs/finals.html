@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Aspire Scoring</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="icon" type="image/png" href="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff">
+    </head>
+    
+    <body onload="getData('finalsMatches')">
+        <script src="main.js"></script>
+        <div class="navbar"> 
+            <a href="index.html"><img id="logo" src="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff"></a>
+            <a class="link" href="quals.html">Qualification Matches</a>
+            <a class="link" href="finals.html">Finals</a>
+            <a class="link" href="rankings.html">Rankings</a>
+            
+        </div>
+        <h1>Finals Matches</h1>
+        
+        <table id="finalsMatches" border="2px">
+            <colgroup>
+                <col span="1">
+                <col span="2" style="background-color:pink">
+                <col span="2" style="background-color:lightblue">
+                <col span="1" style="background-color:pink">
+                <col span="1" style="background-color:lightblue">
+                
+            </colgroup>
+            <tr>
+                <th>Match #</th>
+                <th class="red">Red Team 1</th>
+                <th class="red">Red Team 2</th>
+                <th class="blue">Blue Team 1</th>
+                <th class="blue">Blue Team 2</th>
+                <th class="red">Red Score</th>
+                <th class="blue">Blue Score</th>
+                <th>Winner</th>
+                
+            </tr>
+            
+        </table>
+        
+        <h4 id="msg">Loading</h4>
+        <div>
+            <h1>Playoff Bracket</h1>
+            <img src="https://codehs.com/uploads/e856460b84ce73a832a5fb1cda8819c6" alt= "Playoff bracket" id="bracket"> </img>
+        </div>
+        
+        
+    </body>
+</html>
