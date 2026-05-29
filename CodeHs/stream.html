@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Scoreboard - Current Match</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="icon" type="image/png" href="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff">
+        <script src="main.js"></script>
+    </head>
+
+    <body onload="renderCurrentMatch();">
+        <div class="navbar">
+            <a href="index.html"><img id="logo" src="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff"></a>
+            <a class="link" href="quals.html">Qualification Matches</a>
+            <a class="link" href="finals.html">Finals</a>
+            <a class="link" href="rankings.html">Rankings</a>
+        </div>
+
+        <!-- Top score bar -->
+        <header class="score-bar">
+            <div class="score-segment red-score">
+                <div class="score-value" id="topRed">0</div>
+            </div>
+            <div class="score-center">Final Score</div>
+            <div class="score-segment blue-score">
+                <div class="score-value" id="topBlue">0</div>
+            </div>
+        </header>
+
+        <!-- Match section -->
+        <div class="match-wrapper">
+            <div class="winner-banner center" id="winnerBanner">🏆 Winner</div>
+
+            <!-- Team panels -->
+            <main class="container">
+            <section class="team-panel red-panel">
+                <div class="team-header">
+                    <div class="team-main">
+                        <div class="team-numbers">
+                            <div class="team-number team-main-number" id="redTeamNumber">00000</div>
+                            <div class="team-number team-partner-number" id="redTeamNumber2">00000</div>
+                        </div>
+                        <div class="team-names">
+                            <div class="team-name team-main-name" id="redTeamName">RED TEAM</div>
+                            <div class="team-name team-partner-name" id="redTeamName2">RED PARTNER</div>
+                        </div>
+                    </div>
+                    <div class="team-logo"></div>
+                </div>
+                <div class="rp-block">
+                    <h3>Ranking Points</h3>
+                    <div class="rp-squares" id="redRPs">
+                        <div class="rp-square trophy" id="redRP1" title="Ranking Point 1"></div>
+                        <div class="rp-square motif" id="redRP2" title="Ranking Point 2"></div>
+                        <div class="rp-square dice" id="redRP3" title="Ranking Point 3"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="team-panel blue-panel">
+                <div class="team-header">
+                    <div class="team-main">
+                        <div class="team-numbers">
+                            <div class="team-number team-main-number" id="blueTeamNumber">00000</div>
+                            <div class="team-number team-partner-number" id="blueTeamNumber2">00000</div>
+                        </div>
+                        <div class="team-names">
+                            <div class="team-name team-main-name" id="blueTeamName">BLUE TEAM</div>
+                            <div class="team-name team-partner-name" id="blueTeamName2">BLUE PARTNER</div>
+                        </div>
+                    </div>
+                    <div class="team-logo"></div>
+                </div>
+                <div class="rp-block">
+                    <h3>Ranking Points</h3>
+                    <div class="rp-squares" id="blueRPs">
+                        <div class="rp-square trophy" id="blueRP1" title="Ranking Point 1"></div>
+                        <div class="rp-square motif" id="blueRP2" title="Ranking Point 2"></div>
+                        <div class="rp-square dice" id="blueRP3" title="Ranking Point 3"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        </div>
+
+        <script>
+            async function renderCurrentMatch() {
+                let match;
+                if (typeof getCurrentMatch === 'function') {
+                    try {
+                        match = await getCurrentMatch();
+                    } catch (e) {
+                        console.error('getCurrentMatch failed', e);
+                    }
+                }
+
+                // fallback sample (uses RP flags at indexes 8-13)
+                if (!match || !Array.isArray(match)) {
+                    match = ['M1', 'qualifier', '26501 | RoboDawgs', '506 | The RoboRanglers', '7477 | AiCitizens', '19066 | The Infinite Recharge', 324, 365, true, false, true, false, true, false, 'blue'];
+                }
+
+                const [matchId, type, red1, red2, blue1, blue2, redScore, blueScore, redRP1, redRP2, redRP3, blueRP1, blueRP2, blueRP3, winner] = match;
+
+                // Top bar
+                document.getElementById('topRed').textContent = redScore ?? '';
+                document.getElementById('topBlue').textContent = blueScore ?? '';
+
+                // Winner banner
+                const winnerBanner = document.getElementById('winnerBanner');
+                const winnerText = winner ?? '';
+                winnerBanner.textContent = `🏆 Winner: ${winnerText}`;
+                winnerBanner.classList.remove('left', 'right', 'center');
+                const winnerKey = winnerText.toString().toLowerCase();
+                if (winnerKey.includes('red')) {
+                    winnerBanner.classList.add('left');
+                } else if (winnerKey.includes('blue')) {
+                    winnerBanner.classList.add('right');
+                } else {
+                    winnerBanner.classList.add('center');
+                }
+
+                function parseTeam(teamString) {
+                    const raw = teamString ?? '';
+                    const value = raw.toString().trim();
+                    if (!value) return { number: '', name: '' };
+                    const parts = value.split('|').map(part => part.trim());
+                    return {
+                        number: parts[0] || '',
+                        name: parts.length > 1 ? parts.slice(1).join(' | ') : ''
+                    };
+                }
+
+                const red1Info = parseTeam(red1);
+                const red2Info = parseTeam(red2);
+                const blue1Info = parseTeam(blue1);
+                const blue2Info = parseTeam(blue2);
+
+                document.getElementById('redTeamNumber').textContent = red1Info.number;
+                document.getElementById('redTeamName').textContent = red1Info.name || 'RED SCALES';
+                document.getElementById('redTeamNumber2').textContent = red2Info.number;
+                document.getElementById('redTeamName2').textContent = red2Info.name || 'RED PARTNER';
+
+                document.getElementById('blueTeamNumber').textContent = blue1Info.number;
+                document.getElementById('blueTeamName').textContent = blue1Info.name || 'BLUE TEAM';
+                document.getElementById('blueTeamNumber2').textContent = blue2Info.number;
+                document.getElementById('blueTeamName2').textContent = blue2Info.name || 'BLUE PARTNER';
+
+                // Mark RP squares
+                function markRP(id, flag, panelClass) {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    el.classList.toggle('earned', !!flag);
+                }
+
+                markRP('redRP1', redRP1);
+                markRP('redRP2', redRP2);
+                markRP('redRP3', redRP3);
+
+                markRP('blueRP1', blueRP1);
+                markRP('blueRP2', blueRP2);
+                markRP('blueRP3', blueRP3);
+            }
+
+            window.renderCurrentMatch = renderCurrentMatch;
+
+            document.addEventListener('DOMContentLoaded', () => {
+                renderCurrentMatch();
+                if (typeof getCurrentMatch === 'function') {
+                    setInterval(renderCurrentMatch, 5000);
+                }
+            });
+        </script>
+    </body>
+</html>

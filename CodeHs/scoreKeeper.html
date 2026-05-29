@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Aspire Scoring</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="icon" type="image/png" href="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff">
+        <script src="main.js"></script>
+    </head>
+    
+    <body>
+        <div class="navbar"> 
+            <a href="index.html"><img id="logo" src="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff"></a>
+            <a class="link" href="quals.html">Qualification Matches</a>
+            <a class="link" href="finals.html">Finals</a>
+            <a class="link" href="rankings.html">Rankings</a>
+        </div>
+
+        <h1 id="test">Match Entry</h1>
+
+        <section class="match-form">
+            <div class="entry-row">
+                <h4 id="msg">Loading match data...</h4>
+            </div>
+            <div class="entry-row">
+                <label for="matchId">Match ID</label>
+                <input id="matchId" type="text" value="M1">
+            </div>
+            <div class="entry-row">
+                <label for="matchType">Match Type</label>
+                <select id="matchType">
+                    <option value="qualifier">Qualifier</option>
+                    <option value="final">Final</option>
+                </select>
+            </div>
+            <div class="entry-row">
+                <label for="red1">Red Team 1</label>
+                <input id="red1" type="text" value="Team 1">
+            </div>
+            <div class="entry-row">
+                <label for="red2">Red Team 2</label>
+                <input id="red2" type="text" value="Team 2">
+            </div>
+            <div class="entry-row">
+                <label for="blue1">Blue Team 1</label>
+                <input id="blue1" type="text" value="Team 3">
+            </div>
+            <div class="entry-row">
+                <label for="blue2">Blue Team 2</label>
+                <input id="blue2" type="text" value="Team 4">
+            </div>
+            <div class="entry-row">
+                <label for="redScore">Red Score</label>
+                <input id="redScore" type="number" value="0">
+            </div>
+            <div class="entry-row">
+                <label for="blueScore">Blue Score</label>
+                <input id="blueScore" type="number" value="0">
+            </div>
+            <div class="rp-row">
+                <span>Red Ranking Points</span>
+                <label><input id="redRP1" type="checkbox"> RP1</label>
+                <label><input id="redRP2" type="checkbox"> RP2</label>
+                <label><input id="redRP3" type="checkbox"> RP3</label>
+            </div>
+            <div class="rp-row">
+                <span>Blue Ranking Points</span>
+                <label><input id="blueRP1" type="checkbox"> RP1</label>
+                <label><input id="blueRP2" type="checkbox"> RP2</label>
+                <label><input id="blueRP3" type="checkbox"> RP3</label>
+            </div>
+            <div class="entry-row">
+                <label>Winner</label>
+                <div id="winnerOutput" class="output-field">Red</div>
+            </div>
+            <button id="submitMatch" type="button" onclick="submitMatch()">Submit Match</button>
+        </section>
+
+        
+
+        <script src="scoreKeeper.js"></script>
+    </body>
+</html>
