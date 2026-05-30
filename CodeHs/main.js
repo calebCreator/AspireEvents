@@ -1,9 +1,10 @@
-const url = "";
+const url = "https://script.google.com/macros/s/AKfycbyvA7A-KeSZ5lb6vSQjEuaMuDTIvvEEtque_Uvn8GcY6nFTbpOlWFWxQQKHXBOe0_3I/exec";
  /*(typeof process !== 'undefined' && process.env && process.env.GOOGLE_SCRIPT_URL)
     ? process.env.GOOGLE_SCRIPT_URL
     : "https://script.google.com/macros/s/AKfycbwKVFtsOLJ6THyon0SFFg7wtb2iJJfg4S8qkQNgACOsbjr-7Bvn7XkEN7X2kePNORc5/exec";
 */
 async function init(page){
+    await getData(page);
     setInterval(() => getData(page), 5000);
 }
 
@@ -11,14 +12,36 @@ async function init(page){
 function addData(table, data){
     var table = document.getElementById(table);
     var row = table.insertRow(-1);
-    
+
     var cells = [];
     for(var i = 0; i < data.length; i++){
         cells.push(row.insertCell(i));
     }
-    
+
+    // Fill cells, formatting numbers
     for(var i = 0; i < data.length; i++){
-        cells[i].innerHTML = data[i];
+        var value = data[i];
+        if(typeof value === "number" && value % 1 !== 0){
+            value = value.toFixed(2);
+        }
+        cells[i].innerHTML = value;
+    }
+
+    // If this row represents a match (qualification or finals), bold the winning score
+    // Expected shortened match format used elsewhere: [matchNum, red1, red2, blue1, blue2, redScore, blueScore, winner]
+    if((table.id === 'qualificationMatches' || table.id === 'finalsMatches') && data.length >= 8){
+        var winner = String(data[7]).toLowerCase();
+        if(winner === 'red'){
+            // red score is at index 5
+            cells[5].innerHTML = '<b>' + cells[5].innerHTML + '</b>';
+        } else if(winner === 'blue'){
+            // blue score is at index 6
+            cells[6].innerHTML = '<b>' + cells[6].innerHTML + '</b>';
+        } else if(winner === 'tie'){
+            // bold both on a tie
+            cells[5].innerHTML = '<b>' + cells[5].innerHTML + '</b>';
+            cells[6].innerHTML = '<b>' + cells[6].innerHTML + '</b>';
+        }
     }
 }
 
@@ -27,16 +50,7 @@ function test(){
     document.getElementById("test").innerHTML = "HEllow"
 }
 var datas = [];
-function displayRankings(){
-    
-    getData("rankings");
-    //console.log(datas)
-    //for(data of datas){
-    //    addData('rankings',data)
-    //}
-    
-    //document.getElementById("msg").innerHTML = ""
-}
+
 
 async function getData(page){
     document.getElementById("msg").innerHTML = "Loading...";
@@ -134,4 +148,76 @@ async function getLastMatch(){
     return currentMatch;
 }
 
+//This function returns the qualification matches from the list of matches
+function getQualificationMatches(matches){
+    var qualificationMatches = [];
+    for (match of matches){
+        if(match[1] === "qualifier"){
+            qualificationMatches.push(match);
+        }
+    }
+    return qualificationMatches;
+}
 
+//This function returns the finals matches from the list of matches
+function getFinalsMatches(matches){
+    var finalsMatches = [];
+    for (match of matches){
+        if(match[1] === "final"){
+            finalsMatches.push(match);
+        }
+    }
+    return finalsMatches;
+}
+
+function getPlayedMatches(matches){
+    var playedMatches = [];
+    for (match of matches){
+        if(match[6] !== ""){
+            playedMatches.push(match);
+        }
+    }
+    return playedMatches;
+}
+
+async function displayQualMatches(){
+    //Get the matches data
+    var matches = await getData2();
+    quals = getQualificationMatches(matches);
+
+    //Clear the table
+    var table = document.getElementById("qualificationMatches");
+    while (table.rows.length > 1) {
+        table.deleteRow(1);
+    }
+    
+    var matchNum = 0
+    for (match of quals){
+        matchNum++;
+
+        //Shorten match data to only include relevant information for the table
+        match = [matchNum, match[2], match[3], match[4], match[5], match[6], match[7], match[14]];
+        addData("qualificationMatches", match);
+    }
+}
+
+async function displayFinalsMatches(){
+    //Get the matches data
+    var matches = await getData2();
+    finals = getFinalsMatches(matches);
+
+    //Clear the table
+    var table = document.getElementById("finalsMatches");
+    while (table.rows.length > 1) {
+        table.deleteRow(1);
+    }
+
+    var matchNum = 0
+    for (match of finals){
+        matchNum++;
+        //Shorten match data to only include relevant information for the table
+        match = [matchNum, match[2], match[3], match[4], match[5], match[6], match[7], match[14]];
+        addData("finalsMatches", match);
+    }
+
+}

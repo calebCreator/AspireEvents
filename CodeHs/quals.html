@@ -7,7 +7,7 @@
         <link rel="icon" type="image/png" href="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff">
     </head>
     
-    <body onload="init('qualificationMatches')">
+    <body onload="displayQualMatches(); setInterval(displayQualMatches, 5000);">
         <script src="main.js"></script>
         <div class="navbar"> 
             <a href="index.html"><img id="logo" src="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff"></a>
@@ -27,8 +27,10 @@
             </colgroup>
             <tr>
                 <th>Match #</th>
-                <th class="red">Red Team</th>
-                <th class="blue">Blue Team</th>
+                <th class="red">Red 1</th>
+                <th class="red">Red 2</th>
+                <th class="blue">Blue 1</th>
+                <th class="blue">Blue 2</th>
                 <th class="red">Red Score</th>
                 <th class="blue">Blue Score</th>
                 <th>Winner</th>

@@ -6,9 +6,10 @@
         <link rel="stylesheet" type="text/css" href="style.css">
         <link rel="icon" type="image/png" href="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff">
         <script src="main.js"></script>
+        <script src="rankings.js"></script>
     </head>
     
-    <body onload="init('rankings');">
+    <body onload="displayRankings(); setInterval(displayRankings, 5000);">
         
     
         <div class="navbar"> 
@@ -22,10 +23,11 @@
         <table id= "rankings" border="2px">
             
             <tr class="zebra">
-                <th>Team #</th>
-                <th>OPR</th>
-                <th>Auto</th>
                 <th>Rank</th>
+                <th>Team #</th>
+                <th>RP</th>
+                <th>Match Points</th>
+                <th>Plays</th>
             </tr>
             
 
