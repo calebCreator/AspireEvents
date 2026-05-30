@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Aspire Scoring - Schedule Generator</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="icon" type="image/png" href="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff">
+    </head>
+    
+    <body>
+        <script src="main.js"></script>
+        <script src="generator.js"></script>
+        
+        <div class="navbar"> 
+            <a href="index.html"><img id="logo" src="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff"></a>
+            <a class="link" href="quals.html">Qualification Matches</a>
+            <a class="link" href="finals.html">Finals</a>
+            <a class="link" href="rankings.html">Rankings</a>
+            <a class="link" href="schedule.html">Schedule</a>
+        </div>
+        
+        <h1>Match Schedule Generator</h1>
+        
+        <div id="schedule-generator" style="padding: 20px; background: var(--surface); margin: 20px; border-radius: 8px; box-shadow: var(--shadow);">
+            <h2>Generate New Schedule</h2>
+            
+            <div style="margin-bottom: 20px;">
+                <label for="teams-input" style="display: block; margin-bottom: 8px; font-weight: bold;">Teams (comma-separated team numbers):</label>
+                <textarea id="teams-input" placeholder="e.g., 1234,5678,9012,3456" style="width: 100%; height: 80px; padding: 10px; border: 2px solid var(--border); border-radius: 4px; font-family: monospace;"></textarea>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label for="total-matches" style="display: block; margin-bottom: 8px; font-weight: bold;">Total Matches:</label>
+                <input type="number" id="total-matches" value="14" min="1" max="1000" style="width: 100%; padding: 10px; border: 2px solid var(--border); border-radius: 4px;">
+            </div>
+            
+            <button onclick="generateAndDisplaySchedule()" style="padding: 12px 24px; background: var(--primary); color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer;">
+                Generate Schedule
+            </button>
+        </div>
+        
+        <h4 id="msg" style="padding: 20px; text-align: center; color: var(--text-muted);"></h4>
+
+        <div id="schedule-display" style="padding: 20px; background: var(--surface); margin: 20px; border-radius: 8px; box-shadow: var(--shadow); display: none;">
+            <h2>Generated Schedule</h2>
+            <div style="margin-bottom: 20px;">
+                <button onclick="downloadSchedule()" style="padding: 10px 20px; background: var(--success); color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; margin-right: 10px;">
+                    Download as CSV
+                </button>
+                <button onclick="sendScheduleToServer()" style="padding: 10px 20px; background: var(--accent); color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; margin-right: 10px;">
+                    Save Schedule to Server
+                </button>
+                <button onclick="printSchedule()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer;">
+                    Print
+                </button>
+            </div>
+            
+            <table id="schedule-table" border="2px" style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <th style="padding: 12px; background: var(--surface-strong);">Match #</th>
+                    <th style="padding: 12px; background: var(--surface-strong); background-color: #ffb3b3;">Red 1</th>
+                    <th style="padding: 12px; background: var(--surface-strong); background-color: #ffb3b3;">Red 2</th>
+                    <th style="padding: 12px; background: var(--surface-strong); background-color: #b3d9ff;">Blue 1</th>
+                    <th style="padding: 12px; background: var(--surface-strong); background-color: #b3d9ff;">Blue 2</th>
+                </tr>
+            </table>
+            <div id="schedule-upload" style="display: none;">
+                <table id="schedule-upload-table"></table>
+            </div>
+        </div>
+        
+        
+        
+        <script>
+            let currentSchedule = { schedule: [], surrogates: [] };
+
+            function generateAndDisplaySchedule(){
+                const teamsInput = document.getElementById('teams-input').value;
+                const totalMatches = parseInt(document.getElementById('total-matches').value);
+                const msgDiv = document.getElementById('msg');
+                
+                // Parse teams from input
+                const teams = teamsInput.split(',').map(t => t.trim()).filter(t => t !== '');
+                
+                // Validate input
+                if(teams.length < 4){
+                    msgDiv.innerHTML = '❌ Error: You need at least 4 teams to generate a schedule.';
+                    msgDiv.style.color = 'var(--danger)';
+                    return;
+                }
+                
+                if(totalMatches < 1){
+                    msgDiv.innerHTML = '❌ Error: You must have at least 1 match.';
+                    msgDiv.style.color = 'var(--danger)';
+                    return;
+                }
+                
+                msgDiv.innerHTML = '⏳ Generating schedule...';
+                msgDiv.style.color = 'var(--text-muted)';
+                
+                try {
+                    // Generate the schedule
+                    currentSchedule = makeFairSchedule(teams, totalMatches);
+                    console.log("Schedule generated:", currentSchedule);
+                    
+                    // Display the schedule
+                    displayScheduleTable(currentSchedule);
+                    msgDiv.innerHTML = '✅ Schedule generated successfully!';
+                    msgDiv.style.color = 'var(--success)';
+                } catch(error){
+                    msgDiv.innerHTML = '❌ Error generating schedule: ' + error.message;
+                    msgDiv.style.color = 'var(--danger)';
+                    console.error(error);
+                }
+            }
+            
+            function displayScheduleTable(schedule){
+                const table = document.getElementById('schedule-table');
+                
+                const scheduleObj = Array.isArray(schedule) ? { schedule, surrogates: [] } : schedule;
+                const scheduleArray = scheduleObj.schedule || [];
+                const surrogateLookup = new Set((scheduleObj.surrogates || []).map(entry => `${entry[1]}|${entry[0]}`));
+
+                // Clear existing rows (except header)
+                while(table.rows.length > 1){
+                    table.deleteRow(1);
+                }
+                
+                // Add schedule data
+                for(let i = 0; i < scheduleArray.length; i++){
+                    const match = scheduleArray[i];
+                    const row = table.insertRow(-1);
+                    
+                    const cells = [];
+                    cells.push(row.insertCell(0)); // Match #
+                    cells.push(row.insertCell(1)); // Red 1
+                    cells.push(row.insertCell(2)); // Red 2
+                    cells.push(row.insertCell(3)); // Blue 1
+                    cells.push(row.insertCell(4)); // Blue 2
+                    
+                    // Apply styles
+                    for(let j = 0; j < cells.length; j++){
+                        cells[j].style.padding = '12px';
+                        cells[j].style.textAlign = 'center';
+                        cells[j].style.borderBottom = '1px solid var(--border)';
+                    }
+                    
+                    const matchNum = i + 1;
+                    const red1 = match.red1 || match[0] || '';
+                    const red2 = match.red2 || match[1] || '';
+                    const blue1 = match.blue1 || match[2] || '';
+                    const blue2 = match.blue2 || match[3] || '';
+
+                    cells[0].innerHTML = matchNum;
+                    cells[1].innerHTML = red1;
+                    cells[2].innerHTML = red2;
+                    cells[3].innerHTML = blue1;
+                    cells[4].innerHTML = blue2;
+
+                    if(surrogateLookup.has(`${matchNum}|${red1}`)){
+                        cells[1].style.textDecoration = 'underline';
+                    }
+                    if(surrogateLookup.has(`${matchNum}|${red2}`)){
+                        cells[2].style.textDecoration = 'underline';
+                    }
+                    if(surrogateLookup.has(`${matchNum}|${blue1}`)){
+                        cells[3].style.textDecoration = 'underline';
+                    }
+                    if(surrogateLookup.has(`${matchNum}|${blue2}`)){
+                        cells[4].style.textDecoration = 'underline';
+                    }
+                    
+                    // Color code by alliance
+                    cells[1].style.backgroundColor = '#ffe6e6';
+                    cells[2].style.backgroundColor = '#ffe6e6';
+                    cells[3].style.backgroundColor = '#e6f0ff';
+                    cells[4].style.backgroundColor = '#e6f0ff';
+                }
+                
+                document.getElementById('schedule-display').style.display = 'block';
+            }
+            
+            async function sendScheduleToServer(){
+                const msgDiv = document.getElementById('msg');
+                if(!Array.isArray(currentSchedule.schedule) || currentSchedule.schedule.length === 0){
+                    msgDiv.innerHTML = '❌ No finalized schedule available. Generate a schedule first.';
+                    msgDiv.style.color = 'var(--danger)';
+                    return;
+                }
+
+                msgDiv.innerHTML = '⏳ Sending schedule to server...';
+                msgDiv.style.color = 'var(--text-muted)';
+
+                const uploadTable = document.getElementById('schedule-upload-table');
+                while(uploadTable.rows.length > 0){
+                    uploadTable.deleteRow(0);
+                }
+
+                try {
+                    for(let i = 0; i < currentSchedule.schedule.length; i++){
+                        const match = currentSchedule.schedule[i];
+                        const rowData = [
+                            i + 1,
+                            match.red1 || match[0] || '',
+                            match.red2 || match[1] || '',
+                            match.blue1 || match[2] || '',
+                            match.blue2 || match[3] || ''
+                        ];
+
+                        addData('schedule-upload-table', rowData);
+
+                        await postData(
+                            'Q' + (i + 1).toString(),
+                            'qualifier',
+                            rowData[1],
+                            rowData[2],
+                            rowData[3],
+                            rowData[4],
+                            '',
+                            '',
+                            false,
+                            false,
+                            false,
+                            false,
+                            false,
+                            false,
+                            ''
+                        );
+                    }
+
+                    msgDiv.innerHTML = '✅ Schedule sent successfully!';
+                    msgDiv.style.color = 'var(--success)';
+                } catch(error){
+                    msgDiv.innerHTML = '❌ Failed to send schedule: ' + error.message;
+                    msgDiv.style.color = 'var(--danger)';
+                    console.error(error);
+                }
+            }
+
+            function downloadSchedule(){
+                const table = document.getElementById('schedule-table');
+                let csv = 'Match #,Red 1,Red 2,Blue 1,Blue 2\n';
+                
+                // Start from row 1 to skip header
+                for(let i = 1; i < table.rows.length; i++){
+                    const row = table.rows[i];
+                    const cells = [];
+                    for(let j = 0; j < row.cells.length; j++){
+                        cells.push(row.cells[j].textContent);
+                    }
+                    csv += cells.join(',') + '\n';
+                }
+                
+                // Create download link
+                const blob = new Blob([csv], {type: 'text/csv'});
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'match_schedule.csv';
+                link.click();
+            }
+            
+            function printSchedule(){
+                window.print();
+            }
+        </script>
+    </body>
+</html>

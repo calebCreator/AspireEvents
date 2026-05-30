@@ -24,20 +24,29 @@ let totalMatches;
 let teamData;
 let rerun = true;
 
-//const ALLIANCES = ["red1", "red2", "blue1", "blue2"];
-const ALLIANCES = ["red1", "blue1"]
+const ALLIANCES = ["red1", "red2", "blue1", "blue2"];
 
-function main(){
-    let teams  = getInfo();
+// Utility function to get random integer between min and max (inclusive)
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+//const ALLIANCES = ["red1", "blue1"]
+
+//Main function to run the program
+function makeFairSchedule(teams, totalMatches){
+    //let teams  = getInfo();
     //teamData = createTeamData(teams);
     let schedule = {};
     while(rerun){
         
         schedule = generateSchedule(teams, totalMatches);
     }
-    printSchedule(schedule);
-    calculateSurrogates(schedule, teams);
-    
+
+    const surrogates = calculateSurrogates(schedule, teams);
+
+    console.log("Schedule generated successfully!");
+    //console.log(schedule);
+    return { schedule, surrogates };
 }
 
 
@@ -92,10 +101,10 @@ function genSchedule(matches, teamz){
             //If there are teams that haven't played recently
             if(teams.length > 0){
                 //Add one of them to the list
-                let index = Randomizer.nextInt(0,teams.length - 1);
+                let index = getRandomInt(0, teams.length - 1);
                 teamsInMatch.push(teams[index]);
                 //Mark down that they played a match
-                teams.remove(index);
+                teams.splice(index, 1);
             }else{
                 //If all the teams have played
                 teams = TEAMS.slice();
@@ -112,10 +121,9 @@ function genSchedule(matches, teamz){
         
         
         for(let color of ALLIANCES/*["red1", "red2", "blue1", "blue2"]*/){
-            let index = Randomizer.nextInt(0, teamsInMatch.length -1);
+            let index = getRandomInt(0, teamsInMatch.length - 1);
             match[color] = teamsInMatch[index];
-            teamsInMatch.remove(index);
-            
+            teamsInMatch.splice(index, 1);
         }
         
         schedule.push(match);
@@ -181,7 +189,7 @@ function calculateSurrogates(schedule, teams){
         }
     }
     
-    
+    var surrogates = [];
     for(let team of teams){
         if(counts[team] > fewestMatches){
             //They have a surrogate
@@ -198,12 +206,16 @@ function calculateSurrogates(schedule, teams){
             }
             //console.log(dictContains({"a": "1", "b": "2"}, "1", ["a", "b"]));
             //console.log(teams)
-            matcheee = matches[Randomizer.nextInt(0,matches.length-1)];
+            matcheee = matches[getRandomInt(0, matches.length - 1)];
             console.log(team +  " has a surrogate match of match " + matcheee);
+            surrogates.push([team, matcheee]);
+
         }
     }
     //console.log(counts);
     console.log("Each team will play " + fewestMatches + " matches.");
+
+    return surrogates;
 }
 
 function dictContains(dict, item, keys){
@@ -252,4 +264,4 @@ function printSchedule(schedule){
     }
 }
 
-main();
+//main();
