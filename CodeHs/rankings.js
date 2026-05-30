@@ -22,6 +22,15 @@ async function getRankings(){
     }
 
     console.log(rankings);
+
+    //Hide loading message
+    if(rankings.length === 0){
+        document.getElementById("msg").innerHTML = "Rankings will be displayed here once qualification matches have been played.";
+    }else{
+        document.getElementById("msg").innerHTML = "";
+    }
+
+    
     return rankings;
 }
 

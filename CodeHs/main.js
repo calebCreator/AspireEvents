@@ -199,6 +199,13 @@ async function displayQualMatches(){
         match = [matchNum, match[2], match[3], match[4], match[5], match[6], match[7], match[14]];
         addData("qualificationMatches", match);
     }
+
+    //If there are no qualification matches yet, update the message to indicate that the finals have not started
+    if(quals.length === 0){
+        document.getElementById("msg").innerHTML = "Qualification matches have not started yet.";
+    }else{
+        document.getElementById("msg").innerHTML = "";
+    }
 }
 
 async function displayFinalsMatches(){
@@ -218,6 +225,13 @@ async function displayFinalsMatches(){
         //Shorten match data to only include relevant information for the table
         match = [matchNum, match[2], match[3], match[4], match[5], match[6], match[7], match[14]];
         addData("finalsMatches", match);
+    }
+
+    //If there are no finals matches yet, update the message to indicate that the finals have not started
+    if(finals.length === 0){
+        document.getElementById("msg").innerHTML = "Finals have not started yet.";
+    }else{
+        document.getElementById("msg").innerHTML = "";
     }
 
 }
