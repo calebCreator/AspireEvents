@@ -36,9 +36,9 @@ function getRandomInt(min, max) {
 function makeFairSchedule(teams, totalMatches){
     //let teams  = getInfo();
     //teamData = createTeamData(teams);
-    let schedule = {};
+    rerun = true;
+    let schedule = [];
     while(rerun){
-        
         schedule = generateSchedule(teams, totalMatches);
     }
 

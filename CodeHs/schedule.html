@@ -5,6 +5,67 @@
         <title>Aspire Scoring - Schedule Generator</title>
         <link rel="stylesheet" type="text/css" href="style.css">
         <link rel="icon" type="image/png" href="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff">
+        <style>
+            @media print {
+                @page {
+                    size: portrait;
+
+                    /*Top margin and bottom margin are zero, but sides are normal*/
+                    margin: 0;
+                    /*Side margins are normal*/
+                    margin-left: 10mm;
+                    margin-right: 10mm;
+                }
+                html, body {
+                    width: 100%;
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                    background: none !important;
+                    color: #000;
+                }
+                body {
+                    font-size: 10pt;
+                }
+                .navbar,
+                #schedule-generator,
+                #msg,
+                button {
+                    display: none !important;
+                }
+                #schedule-display {
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    box-shadow: none !important;
+                }
+                table {
+                    width: 100% !important;
+                    border-collapse: collapse !important;
+                    table-layout: fixed !important;
+                    font-size: 9pt !important;
+                }
+                th, td {
+                    padding: 4px !important;
+                    border: 1px solid #000 !important;
+                    word-wrap: break-word !important;
+                }
+                th {
+                    background: #f1f1f1 !important;
+                }
+                #schedule-display, #schedule-table {
+                    page-break-inside: avoid !important;
+                }
+                #schedule-heading {
+                    display: none !important;
+                }
+                #page-title {
+                    display: none !important;
+                }
+                #print-title {
+                    display: block !important;
+                }
+            }
+        </style>
     </head>
     
     <body>
@@ -19,7 +80,8 @@
             <a class="link" href="schedule.html">Schedule</a>
         </div>
         
-        <h1>Match Schedule Generator</h1>
+        <h1 id="page-title">Match Schedule Generator</h1>
+        <h1 id="print-title" style="display: none;">Competition Schedule</h1>
         
         <div id="schedule-generator" style="padding: 20px; background: var(--surface); margin: 20px; border-radius: 8px; box-shadow: var(--shadow);">
             <h2>Generate New Schedule</h2>
@@ -42,7 +104,10 @@
         <h4 id="msg" style="padding: 20px; text-align: center; color: var(--text-muted);"></h4>
 
         <div id="schedule-display" style="padding: 20px; background: var(--surface); margin: 20px; border-radius: 8px; box-shadow: var(--shadow); display: none;">
-            <h2>Generated Schedule</h2>
+            <h2 id="schedule-heading">Generated Schedule</h2>
+            <div id="schedule-key" style="margin-bottom: 20px; font-style: italic; color: var(--text-muted);">
+                <u>Underline</u> indicates surrogate.
+            </div>
             <div style="margin-bottom: 20px;">
                 <button onclick="downloadSchedule()" style="padding: 10px 20px; background: var(--success); color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; margin-right: 10px;">
                     Download as CSV
