@@ -4,13 +4,30 @@
     <head>
         <title>Scoreboard - Current Match</title>
         <link rel="stylesheet" type="text/css" href="style.css">
-        <link rel="icon" type="image/png" href="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff">
+        <link rel="icon" type="image/png" href="https://codehs.com/uploads/ca70a451e53c1733dce494f0b2d7cefe">
+        <style>
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            .spinner-inline {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border: 3px solid rgba(0, 0, 0, 0.15);
+                border-top: 3px solid var(--primary, #2735d0);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin-right: 8px;
+                vertical-align: middle;
+            }
+        </style>
         <script src="main.js"></script>
     </head>
 
     <body onload="renderCurrentMatch();">
         <div class="navbar">
-            <a href="index.html"><img id="logo" src="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff"></a>
+            <a href="index.html"><img id="logo" src="https://codehs.com/uploads/ca70a451e53c1733dce494f0b2d7cefe"></a>
             <a class="link" href="quals.html">Qualification Matches</a>
             <a class="link" href="finals.html">Finals</a>
             <a class="link" href="rankings.html">Rankings</a>
@@ -28,147 +45,102 @@
         </header>
 
         <!-- Match section -->
-        <div class="match-wrapper">
-            <div class="winner-banner center" id="winnerBanner">🏆 Winner</div>
+        <div class="match-wrapper" style="padding: 40px 20px; text-align: center;">
+            <div id="match-info" style="margin-bottom: 40px;">
+                <h1 id="match-number" style="font-size: 48px; margin: 0; color: var(--text); font-weight: bold;">Match -</h1>
+            </div>
 
-            <!-- Team panels -->
-            <main class="container">
-            <section class="team-panel red-panel">
-                <div class="team-header">
-                    <div class="team-main">
-                        <div class="team-numbers">
-                            <div class="team-number team-main-number" id="redTeamNumber">00000</div>
-                            <div class="team-number team-partner-number" id="redTeamNumber2">00000</div>
-                        </div>
-                        <div class="team-names">
-                            <div class="team-name team-main-name" id="redTeamName">RED TEAM</div>
-                            <div class="team-name team-partner-name" id="redTeamName2">RED PARTNER</div>
-                        </div>
+            <div style="display: flex; justify-content: center; gap: 40px; margin: 40px 0;">
+                <!-- Red Alliance -->
+                <div style="background: #ffe6e6; padding: 30px; border-radius: 8px; min-width: 300px;">
+                    <h2 style="color: #d32f2f; margin-top: 0;">RED ALLIANCE</h2>
+                    <div style="font-size: 28px; font-weight: bold; margin: 20px 0;">
+                        <div id="red1" style="padding: 10px; background: white; margin: 10px 0; border-radius: 4px;">-</div>
+                        <div id="red2" style="padding: 10px; background: white; margin: 10px 0; border-radius: 4px;">-</div>
                     </div>
-                    <div class="team-logo"></div>
-                </div>
-                <div class="rp-block">
-                    <h3>Ranking Points</h3>
-                    <div class="rp-squares" id="redRPs">
-                        <div class="rp-square trophy" id="redRP1" title="Ranking Point 1"></div>
-                        <div class="rp-square motif" id="redRP2" title="Ranking Point 2"></div>
-                        <div class="rp-square dice" id="redRP3" title="Ranking Point 3"></div>
+                    <div style="font-size: 36px; font-weight: bold; color: #d32f2f; margin-top: 20px;">
+                        <span id="red-score">0</span>
                     </div>
                 </div>
-            </section>
 
-            <section class="team-panel blue-panel">
-                <div class="team-header">
-                    <div class="team-main">
-                        <div class="team-numbers">
-                            <div class="team-number team-main-number" id="blueTeamNumber">00000</div>
-                            <div class="team-number team-partner-number" id="blueTeamNumber2">00000</div>
-                        </div>
-                        <div class="team-names">
-                            <div class="team-name team-main-name" id="blueTeamName">BLUE TEAM</div>
-                            <div class="team-name team-partner-name" id="blueTeamName2">BLUE PARTNER</div>
-                        </div>
+                <!-- Blue Alliance -->
+                <div style="background: #e6f0ff; padding: 30px; border-radius: 8px; min-width: 300px;">
+                    <h2 style="color: #1976d2; margin-top: 0;">BLUE ALLIANCE</h2>
+                    <div style="font-size: 28px; font-weight: bold; margin: 20px 0;">
+                        <div id="blue1" style="padding: 10px; background: white; margin: 10px 0; border-radius: 4px;">-</div>
+                        <div id="blue2" style="padding: 10px; background: white; margin: 10px 0; border-radius: 4px;">-</div>
                     </div>
-                    <div class="team-logo"></div>
-                </div>
-                <div class="rp-block">
-                    <h3>Ranking Points</h3>
-                    <div class="rp-squares" id="blueRPs">
-                        <div class="rp-square trophy" id="blueRP1" title="Ranking Point 1"></div>
-                        <div class="rp-square motif" id="blueRP2" title="Ranking Point 2"></div>
-                        <div class="rp-square dice" id="blueRP3" title="Ranking Point 3"></div>
+                    <div style="font-size: 36px; font-weight: bold; color: #1976d2; margin-top: 20px;">
+                        <span id="blue-score">0</span>
                     </div>
                 </div>
-            </section>
-        </main>
+            </div>
+
+            <div id="status-message" style="margin-top: 40px; font-size: 18px; color: var(--text-muted);"></div>
         </div>
 
         <script>
             async function renderCurrentMatch() {
-                let match;
-                if (typeof getCurrentMatch === 'function') {
-                    try {
-                        match = await getCurrentMatch();
-                    } catch (e) {
-                        console.error('getCurrentMatch failed', e);
+                try {
+                    // Fetch all matches (quals)
+                    //const data = await getData('qualmatches');
+                    
+                    // if (!data || data.length === 0) {
+                    //     document.getElementById('status-message').innerHTML = 'No matches found.';
+                    //     return;
+                    // }
+
+                    // Find the last completed match or first incomplete match
+                    let currentMatch = await getLastMatch();
+                    console.log('Current Match Data:', currentMatch);
+                    // for (let i = data.length - 1; i >= 0; i--) {
+                    //     if (data[i].match_num && data[i].red1) {
+                    //         currentMatch = data[i];
+                    //         break;
+                    //     }
+                    // }
+
+                    if (!currentMatch) {
+                        document.getElementById('status-message').innerHTML = 'No current match available.';
+                        return;
                     }
+
+                    // Extract match number from match_num (e.g., "Q1" -> "1")
+                    const matchNum = currentMatch[0] ;//.replace(/^Q/, '');
+                    
+                    // Display match information
+                    document.getElementById('match-number').innerHTML = `Match ${matchNum}`;
+                    document.getElementById('red1').innerHTML = currentMatch[2] || '-';
+                    document.getElementById('red2').innerHTML = currentMatch[3] || '-';
+                    document.getElementById('blue1').innerHTML = currentMatch[4] || '-';
+                    document.getElementById('blue2').innerHTML = currentMatch[5] || '-';
+
+                    // Display scores
+                    const redScore = parseInt(currentMatch[6] || 0);
+                    const blueScore = parseInt(currentMatch[7] || 0);
+                    document.getElementById('red-score').innerHTML = redScore;
+                    document.getElementById('blue-score').innerHTML = blueScore;
+
+                    // Update top score bar
+                    document.getElementById('topRed').innerHTML = redScore;
+                    document.getElementById('topBlue').innerHTML = blueScore;
+
+                    // Set status message
+                    if (redScore > 0 || blueScore > 0) {
+                        document.getElementById('status-message').innerHTML = '✅ Match Complete';
+                    } else {
+                        document.getElementById('status-message').innerHTML = '<span class="spinner-inline"></span>Awaiting scores...';
+                    }
+
+                } catch (error) {
+                    document.getElementById('status-message').innerHTML = 'Error loading match data.';
+                    console.error('Error:', error);
                 }
-
-                // fallback sample (uses RP flags at indexes 8-13)
-                if (!match || !Array.isArray(match)) {
-                    match = ['M1', 'qualifier', '26501 | RoboDawgs', '506 | The RoboRanglers', '7477 | AiCitizens', '19066 | The Infinite Recharge', 324, 365, true, false, true, false, true, false, 'blue'];
-                }
-
-                const [matchId, type, red1, red2, blue1, blue2, redScore, blueScore, redRP1, redRP2, redRP3, blueRP1, blueRP2, blueRP3, winner] = match;
-
-                // Top bar
-                document.getElementById('topRed').textContent = redScore ?? '';
-                document.getElementById('topBlue').textContent = blueScore ?? '';
-
-                // Winner banner
-                const winnerBanner = document.getElementById('winnerBanner');
-                const winnerText = winner ?? '';
-                winnerBanner.textContent = `🏆 Winner: ${winnerText}`;
-                winnerBanner.classList.remove('left', 'right', 'center');
-                const winnerKey = winnerText.toString().toLowerCase();
-                if (winnerKey.includes('red')) {
-                    winnerBanner.classList.add('left');
-                } else if (winnerKey.includes('blue')) {
-                    winnerBanner.classList.add('right');
-                } else {
-                    winnerBanner.classList.add('center');
-                }
-
-                function parseTeam(teamString) {
-                    const raw = teamString ?? '';
-                    const value = raw.toString().trim();
-                    if (!value) return { number: '', name: '' };
-                    const parts = value.split('|').map(part => part.trim());
-                    return {
-                        number: parts[0] || '',
-                        name: parts.length > 1 ? parts.slice(1).join(' | ') : ''
-                    };
-                }
-
-                const red1Info = parseTeam(red1);
-                const red2Info = parseTeam(red2);
-                const blue1Info = parseTeam(blue1);
-                const blue2Info = parseTeam(blue2);
-
-                document.getElementById('redTeamNumber').textContent = red1Info.number;
-                document.getElementById('redTeamName').textContent = red1Info.name || 'RED SCALES';
-                document.getElementById('redTeamNumber2').textContent = red2Info.number;
-                document.getElementById('redTeamName2').textContent = red2Info.name || 'RED PARTNER';
-
-                document.getElementById('blueTeamNumber').textContent = blue1Info.number;
-                document.getElementById('blueTeamName').textContent = blue1Info.name || 'BLUE TEAM';
-                document.getElementById('blueTeamNumber2').textContent = blue2Info.number;
-                document.getElementById('blueTeamName2').textContent = blue2Info.name || 'BLUE PARTNER';
-
-                // Mark RP squares
-                function markRP(id, flag, panelClass) {
-                    const el = document.getElementById(id);
-                    if (!el) return;
-                    el.classList.toggle('earned', !!flag);
-                }
-
-                markRP('redRP1', redRP1);
-                markRP('redRP2', redRP2);
-                markRP('redRP3', redRP3);
-
-                markRP('blueRP1', blueRP1);
-                markRP('blueRP2', blueRP2);
-                markRP('blueRP3', blueRP3);
             }
 
-            window.renderCurrentMatch = renderCurrentMatch;
-
-            document.addEventListener('DOMContentLoaded', () => {
-                renderCurrentMatch();
-                if (typeof getCurrentMatch === 'function') {
-                    setInterval(renderCurrentMatch, 5000);
-                }
-            });
+            // Refresh every 5 seconds to show live updates
+            setInterval(renderCurrentMatch, 5000);
         </script>
     </body>
 </html>
+

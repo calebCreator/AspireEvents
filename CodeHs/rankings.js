@@ -30,7 +30,7 @@ async function getRankings(){
         document.getElementById("msg").innerHTML = "";
     }
 
-    
+
     return rankings;
 }
 
@@ -43,6 +43,10 @@ function calculateTeamRP(team, matches){
     }
     //Average RP per match
     rp = rp / matchesPlayed.length;
+
+    if(matchesPlayed.length === 0){
+        rp = 0;
+    }
     return rp;
 }
 
@@ -54,6 +58,9 @@ function calculateTeamAverageScore(team, matches){
     }
     //Average score per match
     score = score / matchesPlayed.length;
+    if(matchesPlayed.length === 0){
+        score = 0;
+    }
     return score;
 }
 

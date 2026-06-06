@@ -4,8 +4,24 @@
     <head>
         <title>Aspire Scoring - Schedule Generator</title>
         <link rel="stylesheet" type="text/css" href="style.css">
-        <link rel="icon" type="image/png" href="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff">
+        <link rel="icon" type="image/png" href="https://codehs.com/uploads/ca70a451e53c1733dce494f0b2d7cefe">
         <style>
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            .spinner-inline {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border: 3px solid rgba(0, 0, 0, 0.15);
+                border-top: 3px solid var(--primary, #2735d0);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin-right: 8px;
+                vertical-align: middle;
+            }
+
             @media print {
                 @page {
                     size: portrait;
@@ -73,11 +89,15 @@
         <script src="generator.js"></script>
         
         <div class="navbar"> 
-            <a href="index.html"><img id="logo" src="https://codehs.com/uploads/2b3fa3735a88401d11a7fefe3bb0b3ff"></a>
+            <a href="index.html"><img id="logo" src="https://codehs.com/uploads/ca70a451e53c1733dce494f0b2d7cefe"></a>
             <a class="link" href="quals.html">Qualification Matches</a>
             <a class="link" href="finals.html">Finals</a>
             <a class="link" href="rankings.html">Rankings</a>
             <a class="link" href="stream.html">Stream</a>
+
+            <button onclick="setPasskey()" style="margin-left: auto; padding: 8px 16px; background: var(--accent); color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer;">
+                Set Passkey
+            </button>
         </div>
         
         <h1 id="page-title">Match Schedule Generator</h1>
@@ -160,7 +180,7 @@
                     return;
                 }
                 
-                msgDiv.innerHTML = '⏳ Generating schedule...';
+                msgDiv.innerHTML = '<span class="spinner-inline"></span>Generating schedule...';
                 msgDiv.style.color = 'var(--text-muted)';
                 
                 try {
@@ -253,7 +273,7 @@
                     return;
                 }
 
-                msgDiv.innerHTML = '⏳ Sending schedule to server...';
+                msgDiv.innerHTML = '<span class="spinner-inline"></span>Sending schedule to server...';
                 msgDiv.style.color = 'var(--text-muted)';
 
                 const uploadTable = document.getElementById('schedule-upload-table');
@@ -274,7 +294,7 @@
 
                         addData('schedule-upload-table', rowData);
 
-                        await postData(
+                        var response = await postData(
                             'Q' + (i + 1).toString(),
                             'qualifier',
                             rowData[1],
@@ -289,8 +309,16 @@
                             '',
                             '',
                             '',
-                            ''
+                            '',
+                            getPasskey()
                         );
+
+                        //If post data was not ok, stop the loop and show an error
+                        if (!response.success) {
+                            throw new Error(`Failed to upload match ${rowData[0]}: ${response.error}`);
+                        }
+
+                        msgDiv.innerHTML = '⏳ Sending schedule to server... (' + (i + 1) + '/' + currentSchedule.schedule.length + ')';
                     }
 
                     msgDiv.innerHTML = '✅ Schedule sent successfully!';
@@ -330,3 +358,4 @@
         </script>
     </body>
 </html>
+

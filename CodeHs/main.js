@@ -53,7 +53,7 @@ var datas = [];
 
 
 async function getData(page){
-    document.getElementById("msg").innerHTML = "Loading...";
+    document.getElementById("msg").innerHTML = '<span class="spinner-inline"></span>Loading...';
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     try {
@@ -78,7 +78,7 @@ async function getData(page){
             addData(page, item);
         }
 
-        document.getElementById("msg").innerHTML = "";
+        //document.getElementById("msg").innerHTML = "";
     } catch (error) {
         console.error(error);
         document.getElementById("msg").innerHTML = `Error loading data: ${error.message}`;
@@ -88,26 +88,29 @@ async function getData(page){
         
 }
 
-async function postData(id,type,red1,red2,blue1,blue2,redScore,blueScore,redRP1,redRP2,redRP3,blueRP1,blueRP2,blueRP3,winner){
+async function postData(id,type,red1,red2,blue1,blue2,redScore,blueScore,redRP1,redRP2,redRP3,blueRP1,blueRP2,blueRP3,winner, key){
 
-    const response = await fetch(`${url}?request=POST&id=${encodeURIComponent(id)}&type=${encodeURIComponent(type)}&red1=${encodeURIComponent(red1)}&red2=${encodeURIComponent(red2)}&blue1=${encodeURIComponent(blue1)}&blue2=${encodeURIComponent(blue2)}&redScore=${encodeURIComponent(redScore)}&blueScore=${encodeURIComponent(blueScore)}&redRP1=${encodeURIComponent(redRP1)}&redRP2=${encodeURIComponent(redRP2)}&redRP3=${encodeURIComponent(redRP3)}&blueRP1=${encodeURIComponent(blueRP1)}&blueRP2=${encodeURIComponent(blueRP2)}&blueRP3=${encodeURIComponent(blueRP3)}&winner=${encodeURIComponent(winner)}`);
+    const response = await fetch(`${url}?request=POST&id=${encodeURIComponent(id)}&type=${encodeURIComponent(type)}&red1=${encodeURIComponent(red1)}&red2=${encodeURIComponent(red2)}&blue1=${encodeURIComponent(blue1)}&blue2=${encodeURIComponent(blue2)}&redScore=${encodeURIComponent(redScore)}&blueScore=${encodeURIComponent(blueScore)}&redRP1=${encodeURIComponent(redRP1)}&redRP2=${encodeURIComponent(redRP2)}&redRP3=${encodeURIComponent(redRP3)}&blueRP1=${encodeURIComponent(blueRP1)}&blueRP2=${encodeURIComponent(blueRP2)}&blueRP3=${encodeURIComponent(blueRP3)}&winner=${encodeURIComponent(winner)}&key=${encodeURIComponent(key)}`);
     if (!response.ok) {
         throw new Error(`Network response was not ok (${response.status})`);
     }
 
     const datas = await response.json();
     console.log(datas);
+
+    return datas;
 }
 
-async function updateData(id,type,red1,red2,blue1,blue2,redScore,blueScore,redRP1,redRP2,redRP3,blueRP1,blueRP2,blueRP3,winner){
+async function updateData(id,type,red1,red2,blue1,blue2,redScore,blueScore,redRP1,redRP2,redRP3,blueRP1,blueRP2,blueRP3,winner, key){
 
-    const response = await fetch(`${url}?request=PUT&id=${encodeURIComponent(id)}&type=${encodeURIComponent(type)}&red1=${encodeURIComponent(red1)}&red2=${encodeURIComponent(red2)}&blue1=${encodeURIComponent(blue1)}&blue2=${encodeURIComponent(blue2)}&redScore=${encodeURIComponent(redScore)}&blueScore=${encodeURIComponent(blueScore)}&redRP1=${encodeURIComponent(redRP1)}&redRP2=${encodeURIComponent(redRP2)}&redRP3=${encodeURIComponent(redRP3)}&blueRP1=${encodeURIComponent(blueRP1)}&blueRP2=${encodeURIComponent(blueRP2)}&blueRP3=${encodeURIComponent(blueRP3)}&winner=${encodeURIComponent(winner)}`);
+    const response = await fetch(`${url}?request=PUT&id=${encodeURIComponent(id)}&type=${encodeURIComponent(type)}&red1=${encodeURIComponent(red1)}&red2=${encodeURIComponent(red2)}&blue1=${encodeURIComponent(blue1)}&blue2=${encodeURIComponent(blue2)}&redScore=${encodeURIComponent(redScore)}&blueScore=${encodeURIComponent(blueScore)}&redRP1=${encodeURIComponent(redRP1)}&redRP2=${encodeURIComponent(redRP2)}&redRP3=${encodeURIComponent(redRP3)}&blueRP1=${encodeURIComponent(blueRP1)}&blueRP2=${encodeURIComponent(blueRP2)}&blueRP3=${encodeURIComponent(blueRP3)}&winner=${encodeURIComponent(winner)}&key=${encodeURIComponent(key)}`);
     if (!response.ok) {
         throw new Error(`Network response was not ok (${response.status})`);
     }
 
     const datas = await response.json();
     console.log(datas);
+    return datas;
 }
 
 async function getData2(){
@@ -234,4 +237,23 @@ async function displayFinalsMatches(){
         document.getElementById("msg").innerHTML = "";
     }
 
+}
+
+function setPasskey(){
+    let passkey = prompt("Enter the passkey to access the scorekeeper:");
+    // Store the passkey in local storage for later use
+    localStorage.setItem("passkey", passkey);
+    alert("Passkey saved! You can now access the scorekeeper.");
+}
+
+function getPasskey(){
+    // Retrieve the passkey from local storage
+    const passkey = localStorage.getItem("passkey");
+    if (passkey) {
+        return passkey;
+    } else {
+        alert("No passkey found. Please set a passkey first.");
+        setPasskey();
+        return localStorage.getItem("passkey");
+    }
 }
