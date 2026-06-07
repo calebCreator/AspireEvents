@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Aspire Scoring</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="icon" type="image/png" href="https://codehs.com/uploads/ca70a451e53c1733dce494f0b2d7cefe">
+        <style>
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            .spinner-inline {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border: 3px solid rgba(0, 0, 0, 0.15);
+                border-top: 3px solid var(--primary, #2735d0);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin-right: 8px;
+                vertical-align: middle;
+            }
+            .search-bar {
+                max-width: 560px;
+                margin: 16px 0 24px auto;
+                display: grid;
+                gap: 8px;
+            }
+            .search-bar input {
+                width: 100%;
+                padding: 14px 18px;
+                border-radius: 999px;
+                border: 1px solid rgba(34, 63, 120, 0.18);
+                box-shadow: inset 0 1px 2px rgba(17, 32, 79, 0.08);
+                font-size: 1rem;
+                outline: none;
+                transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            }
+            .search-bar input:focus {
+                border-color: rgba(39, 53, 208, 0.7);
+                box-shadow: 0 0 0 3px rgba(39, 53, 208, 0.12);
+            }
+            .search-label {
+                color: #44506b;
+                font-size: 0.94rem;
+                letter-spacing: 0.01em;
+            }
+        </style>
+        <script src="rankings.js"></script>
+    </head>
+    
+    <body onload="displayQualMatches(); setInterval(displayQualMatches, 5000);">
+        <script src="main.js"></script>
+        <div class="navbar"> 
+            <a href="index.html"><img id="logo" src="https://codehs.com/uploads/ca70a451e53c1733dce494f0b2d7cefe"></a>
+            <a class="link" href="quals.html">Qualification Matches</a>
+            <a class="link" href="finals.html">Finals</a>
+            <a class="link" href="rankings.html">Rankings</a>
+            
+        </div>
+        <h1>Qualification Matches</h1>
+        <div class="search-bar">
+            <input type="text" id="searchBox" placeholder="Search by team number..." oninput="displayQualMatches(false)">
+            
+        </div>
+        <table id="qualificationMatches" border="2px">
+            <colgroup>
+                <col span="1">
+                <col span="1" style="background-color:pink">
+                <col span="1" style="background-color:lightblue">
+                <col span="1" style="background-color:pink">
+                <col span="1" style="background-color:lightblue">
+            </colgroup>
+            <tr>
+                <th>Match #</th>
+                <th class="red">Red 1</th>
+                <th class="red">Red 2</th>
+                <th class="blue">Blue 1</th>
+                <th class="blue">Blue 2</th>
+                <th class="red">Red Score</th>
+                <th class="blue">Blue Score</th>
+                <th>Winner</th>
+            </tr>
+            
+        </table>
+        
+        <h4 id="msg">Loading...</h4>
+    </body>
+</html>
+

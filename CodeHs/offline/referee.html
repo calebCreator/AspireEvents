@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Referee Score Entry</title>
+  <link rel="stylesheet" href="offline.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Match Score Entry</h1>
+    <form id="scoreForm">
+      <div class="form-group">
+        <label for="alliance">Alliance</label>
+        <select id="alliance" name="alliance" required>
+          <option value="">Select Alliance</option>
+          <option value="red">Red</option>
+          <option value="blue">Blue</option>
+        </select>
+      </div>
+
+      <section class="section" id="auto">
+        <button type="button" class="section-toggle" aria-expanded="true">Autonomous<span class="section-icon" aria-hidden="true">▾</span></button>
+        <hr class="section-divider">
+        <div class="nest-group">
+
+
+          <label for="lowNestAuto">Low Nest (score)</label>
+          <input type="number" id="lowNestAuto" name="lowNestAuto" min="0" value="0" readonly>
+          <div class="counters" data-group="lowNestAuto">
+            <div class="counter" data-type="eggs">
+              <span class="icon">🥚</span>
+              <button type="button" class="dec" aria-label="decrement eggs">−</button>
+              <span class="value">0</span>
+              <button type="button" class="inc" aria-label="increment eggs">+</button>
+              <span class="label-text">Eggs</span>
+            </div>
+            <div class="counter" data-type="golden">
+              <span class="icon">🥇</span>
+              <button type="button" class="dec" aria-label="decrement golden eggs">−</button>
+              <span class="value">0</span>
+              <button type="button" class="inc" aria-label="increment golden eggs">+</button>
+              <span class="label-text">Golden</span>
+            </div>
+            <div class="counter" data-type="asteroids">
+              <span class="icon">☄️</span>
+              <button type="button" class="dec" aria-label="decrement asteroids">−</button>
+              <span class="value">0</span>
+              <button type="button" class="inc" aria-label="increment asteroids">+</button>
+              <span class="label-text">Asteroids</span>
+            </div>
+          </div>
+
+          
+        </div>
+
+        <div class="nest-group">
+          <label for="highNestAuto">High Nest (score)</label>
+          <input type="number" id="highNestAuto" name="highNestAuto" min="0" value="0" readonly>
+          <div class="counters" data-group="highNestAuto">
+            <div class="counter" data-type="eggs">
+              <span class="icon">🥚</span>
+              <button type="button" class="dec" aria-label="decrement eggs">−</button>
+              <span class="value">0</span>
+              <button type="button" class="inc" aria-label="increment eggs">+</button>
+              <span class="label-text">Eggs</span>
+            </div>
+            <div class="counter" data-type="golden">
+              <span class="icon">🥇</span>
+              <button type="button" class="dec" aria-label="decrement golden eggs">−</button>
+              <span class="value">0</span>
+              <button type="button" class="inc" aria-label="increment golden eggs">+</button>
+              <span class="label-text">Golden</span>
+            </div>
+            <div class="counter" data-type="asteroids">
+              <span class="icon">☄️</span>
+              <button type="button" class="dec" aria-label="decrement asteroids">−</button>
+              <span class="value">0</span>
+              <button type="button" class="inc" aria-label="increment asteroids">+</button>
+              <span class="label-text">Asteroids</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="autoScore">Auto Bonus Points</label>
+          <input type="number" id="autoScore" name="autoScore" min="0" value="0" readonly>
+          <label>Auto Park</label>
+          <div class="inline-controls">
+            <label><input type="checkbox" id="autoPark1" name="autoPark1"> Robot 1 Park</label>
+            <label><input type="checkbox" id="autoPark2" name="autoPark2"> Robot 2 Park</label>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="section" id="teleop">
+        <button type="button" class="section-toggle" aria-expanded="true">Teleop<span class="section-icon" aria-hidden="true">▾</span></button>
+        <hr class="section-divider">
+        <div class="nest-group">
+          <label for="lowNestTeleop">Low Nest (score)</label>
+          <input type="number" id="lowNestTeleop" name="lowNestTeleop" min="0" value="0" required readonly>
+          <div class="counters" data-group="lowNestTeleop">
+            <div class="counter" data-type="eggs">
+              <span class="icon">🥚</span>
+              <button type="button" class="dec" aria-label="decrement eggs">−</button>
+              <span class="value">0</span>
+              <button type="button" class="inc" aria-label="increment eggs">+</button>
+              <span class="label-text">Eggs</span>
+            </div>
+            <div class="counter" data-type="golden">
+              <span class="icon">🥇</span>
+              <button type="button" class="dec" aria-label="decrement golden eggs">−</button>
+              <span class="value">0</span>
+              <button type="button" class="inc" aria-label="increment golden eggs">+</button>
+              <span class="label-text">Golden</span>
+            </div>
+            <div class="counter" data-type="asteroids">
+              <span class="icon">☄️</span>
+              <button type="button" class="dec" aria-label="decrement asteroids">−</button>
+              <span class="value">0</span>
+              <button type="button" class="inc" aria-label="increment asteroids">+</button>
+              <span class="label-text">Asteroids</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="nest-group">
+          <label for="highNestTeleop">High Nest (score)</label>
+          <input type="number" id="highNestTeleop" name="highNestTeleop" min="0" value="0" required readonly>
+          <div class="counters" data-group="highNestTeleop">
+            <div class="counter" data-type="eggs">
+              <span class="icon">🥚</span>
+              <button type="button" class="dec" aria-label="decrement eggs">−</button>
+              <span class="value">0</span>
+              <button type="button" class="inc" aria-label="increment eggs">+</button>
+              <span class="label-text">Eggs</span>
+            </div>
+            <div class="counter" data-type="golden">
+              <span class="icon">🥇</span>
+              <button type="button" class="dec" aria-label="decrement golden eggs">−</button>
+              <span class="value">0</span>
+              <button type="button" class="inc" aria-label="increment golden eggs">+</button>
+              <span class="label-text">Golden</span>
+            </div>
+            <div class="counter" data-type="asteroids">
+              <span class="icon">☄️</span>
+              <button type="button" class="dec" aria-label="decrement asteroids">−</button>
+              <span class="value">0</span>
+              <button type="button" class="inc" aria-label="increment asteroids">+</button>
+              <span class="label-text">Asteroids</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="section" id="endgame">
+        <button type="button" class="section-toggle" aria-expanded="true">Endgame<span class="section-icon" aria-hidden="true">▾</span></button>
+        <hr class="section-divider">
+        <div class="form-group">
+          <label for="endgamePoints">Endgame points</label>
+          <input type="number" id="endgamePoints" name="endgamePoints" min="0" value="0" readonly>
+        </div>
+        <div class="form-group">
+          <label>Endgame Park</label>
+          <div class="inline-controls">
+            <label><input type="checkbox" id="endPark1" name="endPark1"> Robot 1 Park</label>
+            <label><input type="checkbox" id="endPark2" name="endPark2"> Robot 2 Park</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Endgame Hoard</label>
+          <div class="counters" data-group="hoardEndgame">
+            <div class="counter" data-type="eggs">
+              <span class="icon">🥚</span>
+              <button type="button" class="dec" aria-label="decrement eggs">−</button>
+              <span class="value">0</span>
+              <button type="button" class="inc" aria-label="increment eggs">+</button>
+              <span class="label-text">Hoard Eggs</span>
+            </div>
+            <div class="counter" data-type="asteroids">
+              <span class="icon">☄️</span>
+              <button type="button" class="dec" aria-label="decrement asteroids">−</button>
+              <span class="value">0</span>
+              <button type="button" class="inc" aria-label="increment asteroids">+</button>
+              <span class="label-text">Hoard Asteroids</span>
+            </div>
+          </div>
+        </div>
+        
+        
+      </section>
+      <div class="total-score">
+        <strong>Total score:</strong>
+        <span id="totalPoints">0</span>
+      </div>
+      <div class="ranking-indicators">
+        <div id="rpHoard" class="indicator" aria-label="Hoard ranking point indicator">
+          <span class="indicator-icon">⚡</span>
+          <span class="indicator-label">Hoard 10+</span>
+        </div>
+        <div id="rpGolden" class="indicator" aria-label="Teleop golden eggs ranking point indicator">
+          <span class="indicator-icon">🥇</span>
+          <span class="indicator-label">2+ Teleop Goldens</span>
+        </div>
+        <button type="button" id="rpManual" class="indicator manual" aria-pressed="false">
+          <span class="indicator-icon">🔘</span>
+          <span class="indicator-label">Manual RP</span>
+        </button>
+      </div>
+      <button type="submit">Submit Scores</button>
+      
+    </form>
+
+    <div id="result" class="result" hidden>
+      <strong>Saved Score:</strong>
+      <p id="summary"></p>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('scoreForm');
+    const result = document.getElementById('result');
+    const summary = document.getElementById('summary');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const alliance = document.getElementById('alliance').value;
+      const points = [
+        'lowNestAuto',
+        'highNestAuto',
+        'lowNestTeleop',
+        'highNestTeleop',
+        'autoScore',
+        'endgamePoints'
+      ].reduce((sum, id) => sum + (parseInt(document.getElementById(id)?.value, 10) || 0), 0);
+
+
+      summary.textContent = `${alliance ? alliance.toUpperCase() + ' Alliance - ' : ''}Total points: ${points}`;
+      result.hidden = false;
+      form.reset();
+      if (typeof resetCounters === 'function') resetCounters();
+    });
+
+    form.addEventListener('change', function(event) {
+      if (event.target.id === 'alliance') {
+        localStorage.setItem('refereeColor', event.target.value);
+        const allianceLabel = document.getElementById('alliance');
+        if (allianceLabel) {
+          allianceLabel.classList.remove('alliance-red', 'alliance-blue');
+          if (event.target.value === 'red') allianceLabel.classList.add('alliance-red');
+          else if (event.target.value === 'blue') allianceLabel.classList.add('alliance-blue');
+        }
+      }
+      if (['autoPark1', 'autoPark2', 'endPark1', 'endPark2'].includes(event.target.id)) {
+        updateAutoBonusPoints();
+        updateEndgamePoints();
+        updateTotalScore();
+      }
+    });
+
+    const rpManualButton = document.getElementById('rpManual');
+    if (rpManualButton) {
+      rpManualButton.addEventListener('click', () => {
+        const isActive = rpManualButton.classList.toggle('active');
+        rpManualButton.setAttribute('aria-pressed', isActive.toString());
+      });
+    }
+
+    // --- Counters: eggs, golden eggs, asteroids ---
+    // Points table per phase and nest height (from provided rules)
+    const POINTS = {
+      auto: {
+        park: 5,
+        lowNest:    { eggs: 2,  golden: 6,  asteroids: -4 },
+        highNest:   { eggs: 6,  golden: 18, asteroids: -12 },
+        hoard:      { eggs: 3,  asteroids: 10 }
+      },
+      teleop: {
+        lowNest:    { eggs: 2,  golden: 6,  asteroids: -4 },
+        highNest:   { eggs: 6,  golden: 18, asteroids: -12 }
+      },
+      endgame: {
+        park: 3,
+        hoard: { eggs: 3, asteroids: 10 }
+      }
+    };
+    const groupUpdaters = {};
+
+    function computeCheckboxPoints(ids, perPoint) {
+      return ids.reduce((sum, id) => {
+        const checkbox = document.getElementById(id);
+        return sum + ((checkbox && checkbox.checked) ? perPoint : 0);
+      }, 0);
+    }
+
+    function computeHoardPoints(groupId, phase) {
+      const groupEl = document.querySelector(`.counters[data-group="${groupId}"]`);
+      if (!groupEl) return 0;
+      return Array.from(groupEl.querySelectorAll('.counter')).reduce((sum, counterEl) => {
+        const type = counterEl.dataset.type;
+        const v = parseInt(counterEl.querySelector('.value').textContent || '0', 10) || 0;
+        const pts = (POINTS[phase] && POINTS[phase].hoard && POINTS[phase].hoard[type]) || 0;
+        return sum + v * pts;
+      }, 0);
+    }
+
+    function updateAutoBonusPoints() {
+      const parkPoints = computeCheckboxPoints(['autoPark1', 'autoPark2'], POINTS.auto.park);
+      const hoardPoints = computeHoardPoints('hoardAuto', 'auto');
+      const input = document.getElementById('autoScore');
+      if (input) input.value = parkPoints + hoardPoints;
+    }
+
+    function updateEndgamePoints() {
+      const parkPoints = computeCheckboxPoints(['endPark1', 'endPark2'], POINTS.endgame.park);
+      const hoardPoints = computeHoardPoints('hoardEndgame', 'endgame');
+      const input = document.getElementById('endgamePoints');
+      if (input) input.value = parkPoints + hoardPoints;
+    }
+
+    function computeTotalScore() {
+      return [
+        'lowNestAuto',
+        'highNestAuto',
+        'lowNestTeleop',
+        'highNestTeleop',
+        'autoScore',
+        'endgamePoints'
+      ].reduce((sum, id) => sum + (parseInt(document.getElementById(id)?.value, 10) || 0), 0);
+    }
+
+    function setIndicatorActive(element, active) {
+      if (!element) return;
+      element.classList.toggle('active', active);
+      if (element.tagName.toLowerCase() === 'button') {
+        element.setAttribute('aria-pressed', active.toString());
+      }
+    }
+
+    function updateRankingIndicators() {
+      const hoardCounts = Array.from(document.querySelectorAll('.counters[data-group="hoardAuto"] .counter .value, .counters[data-group="hoardEndgame"] .counter .value'))
+        .reduce((sum, valueEl) => sum + (parseInt(valueEl.textContent || '0', 10) || 0), 0);
+      const goldenCounts = Array.from(document.querySelectorAll('.counters[data-group="lowNestTeleop"] .counter[data-type="golden"] .value, .counters[data-group="highNestTeleop"] .counter[data-type="golden"] .value'))
+        .reduce((sum, valueEl) => sum + (parseInt(valueEl.textContent || '0', 10) || 0), 0);
+
+      setIndicatorActive(document.getElementById('rpHoard'), hoardCounts >= 10);
+      setIndicatorActive(document.getElementById('rpGolden'), goldenCounts >= 2);
+    }
+
+    function updateTotalScore() {
+      const totalPoints = document.getElementById('totalPoints');
+      if (totalPoints) {
+        totalPoints.textContent = computeTotalScore();
+      }
+      updateRankingIndicators();
+    }
+
+    function initCounters() {
+
+      if (localStorage.getItem('refereeColor')) {
+        const color = localStorage.getItem('refereeColor');
+        const allianceSelect = document.getElementById('alliance');
+        allianceSelect.value = color;
+        const allianceLabel = document.getElementById('alliance');
+        if (allianceLabel) {
+          allianceLabel.classList.remove('alliance-red', 'alliance-blue');
+          if (color === 'red') allianceLabel.classList.add('alliance-red');
+          else if (color === 'blue') allianceLabel.classList.add('alliance-blue');
+        }
+      }
+        
+
+      document.querySelectorAll('.section-toggle').forEach(button => {
+      button.addEventListener('click', () => {
+        const section = button.closest('.section');
+        const collapsed = section.classList.toggle('collapsed');
+        button.setAttribute('aria-expanded', (!collapsed).toString());
+      });
+    });
+
+    updateAutoBonusPoints();
+    updateEndgamePoints();
+
+    document.querySelectorAll('.counters').forEach(groupEl => {
+          const groupId = groupEl.dataset.group;
+          const input = document.getElementById(groupId);
+          const isHoardGroup = groupId === 'hoardAuto' || groupId === 'hoardEndgame';
+          if (!input && !isHoardGroup) return;
+
+          function parseGroup(id) {
+            const m = id.match(/(low|high)Nest(Auto|Teleop)/i);
+            if (!m) return null;
+            const height = m[1].toLowerCase() + 'Nest';
+            const phase = m[2].toLowerCase();
+            return { height, phase };
+          }
+
+          const meta = parseGroup(groupId);
+
+          function updateInput() {
+            const total = Array.from(groupEl.querySelectorAll('.counter')).reduce((sum, counterEl) => {
+              const type = counterEl.dataset.type;
+              const v = parseInt(counterEl.querySelector('.value').textContent || '0', 10) || 0;
+              let pts = 0;
+              if (isHoardGroup) {
+                const phase = groupId === 'hoardAuto' ? 'auto' : 'endgame';
+                pts = (POINTS[phase] && POINTS[phase].hoard && POINTS[phase].hoard[type]) || 0;
+              } else if (meta) {
+                pts = (POINTS[meta.phase] && POINTS[meta.phase][meta.height] && POINTS[meta.phase][meta.height][type]) || 0;
+              }
+              return sum + v * pts;
+            }, 0);
+
+            if (input) {
+              input.value = Math.max(0, total);
+            }
+            if (groupId === 'hoardAuto') {
+              updateAutoBonusPoints();
+            }
+            if (groupId === 'hoardEndgame') {
+              updateEndgamePoints();
+            }
+            updateTotalScore();
+          }
+
+        groupUpdaters[groupId] = updateInput;
+
+        groupEl.querySelectorAll('.counter').forEach(counterEl => {
+          const valueEl = counterEl.querySelector('.value');
+          const inc = counterEl.querySelector('.inc');
+          const dec = counterEl.querySelector('.dec');
+
+          inc.addEventListener('click', () => {
+            let v = parseInt(valueEl.textContent || '0', 10) || 0;
+            v++;
+            valueEl.textContent = v;
+            updateInput();
+          });
+
+          dec.addEventListener('click', () => {
+            let v = parseInt(valueEl.textContent || '0', 10) || 0;
+            if (v > 0) v--;
+            valueEl.textContent = v;
+            updateInput();
+          });
+        });
+
+        // initial compute
+        updateInput();
+      });
+    }
+
+    function resetCounters() {
+      document.querySelectorAll('.counters .value').forEach(v => v.textContent = '0');
+      Object.values(groupUpdaters).forEach(fn => { try { fn(); } catch (e){} });
+      updateAutoBonusPoints();
+      updateEndgamePoints();
+      updateTotalScore();
+      const rpManualButton = document.getElementById('rpManual');
+      if (rpManualButton) {
+        rpManualButton.classList.remove('active');
+        rpManualButton.setAttribute('aria-pressed', 'false');
+      }
+    }
+
+    initCounters();
+  </script>
+</body>
+</html>

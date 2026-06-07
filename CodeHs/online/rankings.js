@@ -95,6 +95,19 @@ function getTeamMatches(matches, team){
     return teamMatches;
 }
 
+//This function is similar to getTeamMatches but is more flexible and checks if the team is included in the match instead of checking for an exact match. This allows it to work with team names that may have additional characters (e.g. "Team 123A" would be included in matches for "Team 123").
+function getTeamMatchesFlex(matches, team){
+    var teamMatches = [];
+    for (match of matches){
+        //If team in match and match has been played (score not empty)
+        if(String(match[2]).startsWith(team) || String(match[3]).startsWith(team) || String(match[4]).startsWith(team) || String(match[5]).startsWith(team) && match[6] !== ""){
+            //Add match to team matches
+            teamMatches.push(match);
+        }
+    }
+    return teamMatches;
+}
+
 function calculateMatchRP(match, team){
     var rp = 0;
 
