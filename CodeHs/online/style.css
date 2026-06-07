@@ -735,3 +735,50 @@ td:last-child {
         font-size: 2.75rem;
     }
 }
+
+
+input[type="checkbox"]{
+    width:40px;
+    height:40px;
+
+    background:var(--primary);
+    border-radius:10px;
+}
+
+
+.rp-row label{
+    display:inline-block;
+    font-size:16px;
+    color:#334155;
+    margin-right:12px;
+}
+
+.rp-row input[type="checkbox"]{
+    width:50px;
+    height:50px;
+    background:var(--primary);
+    border-radius:6px;
+}
+
+.rp-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.red-el {
+    color: #b62121;
+}
+.blue-el {
+    color: #1e5ec1;
+}
+
+input.red-el {
+    background: rgba(182, 33, 33, 0.12);
+    border: 1px solid rgba(182, 33, 33, 0.18);
+}
+input.blue-el {
+    background: rgba(30, 94, 193, 0.12);
+    border: 1px solid rgba(30, 94, 193, 0.18);
+}

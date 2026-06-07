@@ -9,6 +9,20 @@ function updateWinnerField() {
     const blueScore = Number(document.getElementById('blueScore').value);
     const winnerOutput = document.getElementById('winnerOutput');
     winnerOutput.textContent = getWinnerFromScores(redScore, blueScore);
+
+    if (redScore > blueScore) {
+        winnerOutput.style.color = 'rgb(204, 0, 0)';
+        winnerOutput.style.background = 'rgba(182, 33, 33, 0.12)';
+        winnerOutput.style.border = '1px solid rgba(182, 33, 33, 0.18)';
+    } else if (blueScore > redScore) {
+        winnerOutput.style.color = 'rgb(0, 0, 204)';
+        winnerOutput.style.background = 'rgba(30, 94, 193, 0.12)';
+        winnerOutput.style.border = '1px solid rgba(30, 94, 193, 0.18)';
+    } else {
+        winnerOutput.style.color = 'black';
+        winnerOutput.style.background = 'var(--surface-muted)';
+        winnerOutput.style.border = '1px solid var(--border)';
+    }
 }
 
 function setFieldValue(id, text) {
