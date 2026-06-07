@@ -197,15 +197,15 @@
       <div class="ranking-indicators">
         <div id="rpHoard" class="indicator" aria-label="Hoard ranking point indicator">
           <span class="indicator-icon">⚡</span>
-          <span class="indicator-label">Hoard 10+</span>
+          <span class="indicator-label">Hoard RP</span>
         </div>
         <div id="rpGolden" class="indicator" aria-label="Teleop golden eggs ranking point indicator">
           <span class="indicator-icon">🥇</span>
-          <span class="indicator-label">2+ Teleop Goldens</span>
+          <span class="indicator-label">Gilded RP</span>
         </div>
-        <button type="button" id="rpManual" class="indicator manual" aria-pressed="false">
-          <span class="indicator-icon">🔘</span>
-          <span class="indicator-label">Manual RP</span>
+        <button type="button" id="meteorRP" class="indicator manual" aria-pressed="false">
+          <span class="indicator-icon">☄️</span>
+          <span class="indicator-label">Meteor Shower RP</span>
         </button>
       </div>
       <button type="submit">Submit Scores</button>
@@ -236,10 +236,11 @@
       ].reduce((sum, id) => sum + (parseInt(document.getElementById(id)?.value, 10) || 0), 0);
 
 
-      summary.textContent = `${alliance ? alliance.toUpperCase() + ' Alliance - ' : ''}Total points: ${points}`;
+      summary.textContent = `${alliance ? alliance.toUpperCase() + ' Alliance - ' : ''}Total points: ${points} - RP Earned: ${(meteorRPButton?.classList.contains('active') ? 'Meteor Shower,' : '')} ${(document.getElementById('rpHoard').classList.contains('active') ? 'Hoard,' : '')} ${(document.getElementById('rpGolden').classList.contains('active') ? 'Gilded' : '')} ${(!meteorRPButton?.classList.contains('active') && !document.getElementById('rpHoard').classList.contains('active') && !document.getElementById('rpGolden').classList.contains('active')) ? 'None' : ''}`;
       result.hidden = false;
       form.reset();
       if (typeof resetCounters === 'function') resetCounters();
+      if (typeof initCounters === 'function') initCounters();
     });
 
     form.addEventListener('change', function(event) {
@@ -259,11 +260,11 @@
       }
     });
 
-    const rpManualButton = document.getElementById('rpManual');
-    if (rpManualButton) {
-      rpManualButton.addEventListener('click', () => {
-        const isActive = rpManualButton.classList.toggle('active');
-        rpManualButton.setAttribute('aria-pressed', isActive.toString());
+    const meteorRPButton = document.getElementById('meteorRP');
+    if (meteorRPButton) {
+      meteorRPButton.addEventListener('click', () => {
+        const isActive = meteorRPButton.classList.toggle('active');
+        meteorRPButton.setAttribute('aria-pressed', isActive.toString());
       });
     }
 
@@ -457,10 +458,10 @@
       updateAutoBonusPoints();
       updateEndgamePoints();
       updateTotalScore();
-      const rpManualButton = document.getElementById('rpManual');
-      if (rpManualButton) {
-        rpManualButton.classList.remove('active');
-        rpManualButton.setAttribute('aria-pressed', 'false');
+      const meteorRPButton = document.getElementById('meteorRP');
+      if (meteorRPButton) {
+        meteorRPButton.classList.remove('active');
+        meteorRPButton.setAttribute('aria-pressed', 'false');
       }
     }
 
