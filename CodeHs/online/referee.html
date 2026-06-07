@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Referee Score Entry</title>
   <link rel="stylesheet" href="offline.css">
+  <link rel="icon" type="image/png" href="https://codehs.com/uploads/ca70a451e53c1733dce494f0b2d7cefe">
+  <script src="main.js"></script>
 </head>
 <body>
   <div class="container">
@@ -21,6 +23,7 @@
 
       <section class="section" id="auto">
         <button type="button" class="section-toggle" aria-expanded="true">Autonomous<span class="section-icon" aria-hidden="true">▾</span></button>
+        <div class="section-content">
         <hr class="section-divider">
         <div class="nest-group">
 
@@ -91,10 +94,14 @@
           </div>
 
         </div>
+        </div>
       </section>
 
-      <section class="section" id="teleop">
-        <button type="button" class="section-toggle" aria-expanded="true">Teleop<span class="section-icon" aria-hidden="true">▾</span></button>
+      
+
+      <section class="section collapsed" id="teleop">
+        <button type="button" class="section-toggle" aria-expanded="false">Teleop<span class="section-icon" aria-hidden="true">▾</span></button>
+        <div class="section-content">
         <hr class="section-divider">
         <div class="nest-group">
           <label for="lowNestTeleop">Low Nest (score)</label>
@@ -151,11 +158,12 @@
             </div>
           </div>
         </div>
-
+        </div>
       </section>
 
-      <section class="section" id="endgame">
-        <button type="button" class="section-toggle" aria-expanded="true">Endgame<span class="section-icon" aria-hidden="true">▾</span></button>
+      <section class="section collapsed" id="endgame">
+        <button type="button" class="section-toggle" aria-expanded="false">Endgame<span class="section-icon" aria-hidden="true">▾</span></button>
+        <div class="section-content">
         <hr class="section-divider">
         <div class="form-group">
           <label for="endgamePoints">Endgame points</label>
@@ -187,7 +195,7 @@
             </div>
           </div>
         </div>
-        
+        </div>
         
       </section>
       <div class="total-score">
@@ -376,13 +384,22 @@
       setIndicatorActive(document.getElementById('rpGolden'), goldenCounts >= 2);
     }
 
+    var pastPoints = '-1';
     function updateTotalScore() {
       const totalPoints = document.getElementById('totalPoints');
       if (totalPoints) {
         totalPoints.textContent = computeTotalScore();
       }
+      //Save to local storage
+      //localStorage.setItem('totalScore' + localStorage.getItem('refereeColor'), totalPoints ? totalPoints.textContent : '0');
+      
+      //Use sendScoreboardData to send the score to the scoreboard 
+      if(sendScoreboardData && typeof sendScoreboardData === 'function' && totalPoints.textContent != pastPoints) {
+        pastPoints = totalPoints.textContent;
+        console.log('Sending data to scoreboard: ', localStorage.getItem('refereeColor') || '', totalPoints ? totalPoints.textContent : '0');
+        sendScoreboardData(localStorage.getItem('refereeColor') || '', totalPoints ? totalPoints.textContent : '0');
+      }
 
-      localStorage.setItem('totalScore' + localStorage.getItem('refereeColor'), totalPoints ? totalPoints.textContent : '0');
 
       console.log('Local storage: ' + localStorage.getItem('totalScore' + localStorage.getItem('refereeColor')));
       updateRankingIndicators();
@@ -408,6 +425,22 @@
         const section = button.closest('.section');
         const collapsed = section.classList.toggle('collapsed');
         button.setAttribute('aria-expanded', (!collapsed).toString());
+
+        //Make all the other sections collapsed when one is expanded to save space since referees usually only need to see one section at a time
+        if (!collapsed) {
+          document.querySelectorAll('.section').forEach(otherSection => {
+            if (otherSection !== section) {
+              otherSection.classList.add('collapsed');
+              const toggle = otherSection.querySelector('.section-toggle');
+              if (toggle) toggle.setAttribute('aria-expanded', 'false');
+            }
+          });
+        }
+
+        //If now not collapsed and the button is the teleop toggle, run endAuto to copy auto values to teleop if teleop is still 0
+        if (!collapsed && button.closest('.section').id === 'teleop') {
+          endAuto();
+        }
       });
     });
 
@@ -495,6 +528,41 @@
         meteorRPButton.setAttribute('aria-pressed', 'false');
       }
     }
+
+    function endAuto(){
+      //If all the teleop inputs are 0, set them to the same as auto to make it easier for referees to just adjust teleop if it's the same as auto
+      //Loop through all teleop inputs and if they are all 0, set them to the value of the corresponding auto input
+      // Do each egg value, golden egg, and asteroid value for both low and high nests
+
+      // Check if all teleop counters are still 0
+      let allZero = true;
+      document.querySelectorAll('.counters[data-group="lowNestTeleop"] .value, .counters[data-group="highNestTeleop"] .value')
+        .forEach(v => {
+          if (parseInt(v.textContent || '0', 10) > 0) allZero = false;
+        });
+
+      if (allZero) {
+        // Copy each counter value from auto to teleop
+        ['lowNest', 'highNest'].forEach(nest => {
+          const autoGroup = document.querySelector(`.counters[data-group="${nest}Auto"]`);
+          const teleopGroup = document.querySelector(`.counters[data-group="${nest}Teleop"]`);
+          if (!autoGroup || !teleopGroup) return;
+
+          autoGroup.querySelectorAll('.counter').forEach(autoCounter => {
+            const type = autoCounter.dataset.type;
+            const autoVal = autoCounter.querySelector('.value').textContent;
+            const teleopCounter = teleopGroup.querySelector(`.counter[data-type="${type}"] .value`);
+            if (teleopCounter) teleopCounter.textContent = autoVal;
+          });
+
+          // Trigger the teleop group's score recalculation
+          if (groupUpdaters[`${nest}Teleop`]) groupUpdaters[`${nest}Teleop`]();
+        });
+
+        updateTotalScore();
+      }
+    }
+
 
     initCounters();
   </script>

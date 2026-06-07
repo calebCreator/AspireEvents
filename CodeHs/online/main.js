@@ -301,3 +301,31 @@ function getPasskey(){
         return localStorage.getItem("passkey");
     }
 }
+
+//Function to get the current scores from the scoreboard
+async function getScoreboardData(){
+    const response = await fetch(`${url}?display=GET`);
+    if (!response.ok) {
+        throw new Error(`Network response was not ok (${response.status})`);
+    }
+
+    const datas = await response.json();
+    console.log(datas);
+
+    return datas;
+
+}
+
+//Function to send alliance's score to the scoreboard
+async function sendScoreboardData(color, score){
+    // Implementation for sending scoreboard data
+    const response = await fetch(`${url}?display=${color}&value=${encodeURIComponent(score)}`);
+    if (!response.ok) {
+        throw new Error(`Network response was not ok (${response.status})`);
+    }
+
+    const datas = await response.json();
+    console.log(datas);
+
+    return datas;
+}

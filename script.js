@@ -19,9 +19,9 @@ function doGet(e) {
     var value = params['value'];
     if(display == 'GET'){
       return getDisplay();
-    }else if(display == 'RED'){
+    }else if(display.toUpperCase() == 'RED'){
       return updateDisplay(value,'RED');
-    }else if(display == 'BLUE'){
+    }else if(display.toUpperCase() == 'BLUE'){
       return updateDisplay(value,'BLUE');
     }else{
       return ContentService.createTextOutput(JSON.stringify({ error: "Invalid Display Request" })).setMimeType(ContentService.MimeType.JSON);

@@ -41,8 +41,13 @@ form{
 #auto{ background:#c9d9ff; border-color:#a1b8fe; }
 #teleop{ background:#d2fce9; border-color:#7effcc; }
 #endgame{ background:#fee2cc; border-color:#ffbc95; }
-.section.collapsed > *:not(.section-toggle){
-  display:none;
+.section-content {
+  max-height: 1000px;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.section.collapsed .section-content {
+  max-height: 0;
 }
 .inline-controls{
   display:flex;
@@ -152,4 +157,10 @@ button[type="submit"]:hover{ background:var(--primary-strong); }
     height:40px;
     background:var(--primary);
     border-radius:10px;
+}
+
+/*Add a smooth transition for when sections are toggled*/
+.section{
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    max-height:1000px; /* Set a large max-height to allow for content expansion */
 }

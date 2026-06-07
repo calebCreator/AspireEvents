@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scoreboard</title>
+    <script src="main.js"></script>
+    <link rel="icon" type="image/png" href="https://codehs.com/uploads/ca70a451e53c1733dce494f0b2d7cefe">
     <style>
         * {
             margin: 0;
@@ -80,13 +82,17 @@
     </div>
 
     <script>
-        function updateScores() {
-            document.getElementById('redScore').textContent = localStorage.getItem('totalScorered')  || 0;
-            document.getElementById('blueScore').textContent = localStorage.getItem('totalScoreblue')  || 0;
+        async function updateScores() {
+            var scores = await getScoreboardData();
+            document.getElementById('redScore').textContent = scores['red'] || 0;
+            document.getElementById('blueScore').textContent = scores['blue'] || 0;
         }
 
         // Update scores on page load
         updateScores();
+        //Reset both scores to 0 on load to prevent stale data
+        sendScoreboardData('red', '0');
+        sendScoreboardData('blue', '0');
 
         // Listen for storage changes (updates from other tabs/windows)
         window.addEventListener('storage', updateScores);
