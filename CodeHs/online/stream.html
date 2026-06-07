@@ -21,24 +21,142 @@
                 margin-right: 8px;
                 vertical-align: middle;
             }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+
+            @keyframes slideUpScale {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px) scale(0.95);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+
+            @keyframes scoreGlow {
+                0%, 100% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.1);
+                }
+            }
+
+            .match-info-reveal {
+                animation: fadeIn 0.6s ease-out forwards;
+            }
+
+            .alliance-card-reveal {
+                animation: slideUpScale 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+                opacity: 0;
+            }
+
+            .red-alliance-reveal {
+                animation-delay: 0.1s;
+            }
+
+            .blue-alliance-reveal {
+                animation-delay: 0.3s;
+            }
+
+            .score-glow {
+                animation: scoreGlow 0.6s ease-in-out;
+            }
+
+            .status-message-reveal {
+                animation: fadeIn 0.5s ease-out 0.6s forwards;
+                opacity: 0;
+            }
+
+            @keyframes pulse {
+                0%, 100% {
+                    opacity: 0.6;
+                    transform: scale(1);
+                }
+                50% {
+                    opacity: 1;
+                    transform: scale(1.05);
+                }
+            }
+
+            .screensaver-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                z-index: 1000;
+                cursor: pointer;
+            }
+
+            .screensaver-icon {
+                width: 120px;
+                height: 120px;
+                border: 4px solid rgba(255, 255, 255, 0.3);
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 30px;
+                animation: pulse 2s ease-in-out infinite;
+                font-size: 60px;
+            }
+
+            .screensaver-text {
+                color: rgba(255, 255, 255, 0.5);
+                font-size: 18px;
+                text-align: center;
+                font-family: Arial, sans-serif;
+            }
+
+            .screensaver-hidden {
+                display: none;
+            }
+
+            .content-hidden {
+                opacity: 0;
+                pointer-events: none;
+            }
         </style>
         <script src="main.js"></script>
     </head>
 
-    <body onload="renderCurrentMatch();">
-        <div class="navbar">
+    <body onload="initializeScreen();">
+        <!-- Screensaver Overlay -->
+        <div id="screensaver" class="screensaver-overlay">
+            <div class="screensaver-icon">🎮</div>
+            <div class="screensaver-text">Press any key or click to reveal score</div>
+        </div>
+
+        <!--<div id="content" class="content-hidden">
             <a href="index.html"><img id="logo" src="https://codehs.com/uploads/ca70a451e53c1733dce494f0b2d7cefe"></a>
             <a class="link" href="quals.html">Qualification Matches</a>
             <a class="link" href="finals.html">Finals</a>
             <a class="link" href="rankings.html">Rankings</a>
-        </div>
+        </div>-->
 
         <!-- Top score bar -->
         <header class="score-bar">
             <div class="score-segment red-score">
                 <div class="score-value" id="topRed">0</div>
             </div>
-            <div class="score-center">Final Score</div>
+            <div id="match-info" style="margin-bottom: 40px;" class="match-info-reveal">
+                <h1 id="match-number" style="font-size: 48px; margin: 0; color: var(--text); font-weight: bold;">Match -</h1>
+            </div>
             <div class="score-segment blue-score">
                 <div class="score-value" id="topBlue">0</div>
             </div>
@@ -46,67 +164,93 @@
 
         <!-- Match section -->
         <div class="match-wrapper" style="padding: 40px 20px; text-align: center;">
-            <div id="match-info" style="margin-bottom: 40px;">
-                <h1 id="match-number" style="font-size: 48px; margin: 0; color: var(--text); font-weight: bold;">Match -</h1>
-            </div>
+            
 
             <div style="display: flex; justify-content: center; gap: 40px; margin: 40px 0;">
                 <!-- Red Alliance -->
-                <div style="background: #ffe6e6; padding: 30px; border-radius: 8px; min-width: 300px;">
+                <div id="red-alliance" class="alliance-card-reveal red-alliance-reveal" style="background: #ffe6e6; padding: 30px; border-radius: 8px; min-width: 300px;">
                     <h2 style="color: #d32f2f; margin-top: 0;">RED ALLIANCE</h2>
                     <div style="font-size: 28px; font-weight: bold; margin: 20px 0;">
                         <div id="red1" style="padding: 10px; background: white; margin: 10px 0; border-radius: 4px;">-</div>
                         <div id="red2" style="padding: 10px; background: white; margin: 10px 0; border-radius: 4px;">-</div>
                     </div>
-                    <div style="font-size: 36px; font-weight: bold; color: #d32f2f; margin-top: 20px;">
+                    <!-- <div style="font-size: 36px; font-weight: bold; color: #d32f2f; margin-top: 20px;">
                         <span id="red-score">0</span>
-                    </div>
+                    </div>-->
                 </div>
 
                 <!-- Blue Alliance -->
-                <div style="background: #e6f0ff; padding: 30px; border-radius: 8px; min-width: 300px;">
+                <div id="blue-alliance" class="alliance-card-reveal blue-alliance-reveal" style="background: #e6f0ff; padding: 30px; border-radius: 8px; min-width: 300px;">
                     <h2 style="color: #1976d2; margin-top: 0;">BLUE ALLIANCE</h2>
                     <div style="font-size: 28px; font-weight: bold; margin: 20px 0;">
                         <div id="blue1" style="padding: 10px; background: white; margin: 10px 0; border-radius: 4px;">-</div>
                         <div id="blue2" style="padding: 10px; background: white; margin: 10px 0; border-radius: 4px;">-</div>
                     </div>
-                    <div style="font-size: 36px; font-weight: bold; color: #1976d2; margin-top: 20px;">
+                <!--<div style="font-size: 36px; font-weight: bold; color: #1976d2; margin-top: 20px;">
                         <span id="blue-score">0</span>
-                    </div>
+                    </div>-->
                 </div>
             </div>
 
-            <div id="status-message" style="margin-top: 40px; font-size: 18px; color: var(--text-muted);"></div>
+            <div id="status-message" class="status-message-reveal" style="margin-top: 40px; font-size: 18px; color: var(--text-muted);"></div>
+        </div>
         </div>
 
         <script>
+            let isRevealed = false;
+            let refreshInterval = null;
+
+            function initializeScreen() {
+                // Add event listeners for screensaver reveal
+                document.addEventListener('keydown', revealScore);
+                document.addEventListener('click', revealScore);
+            }
+
+            async function revealScore() {
+                if (isRevealed) return; // Already revealed
+                
+                isRevealed = true;
+                
+                // Hide screensaver
+                const screensaver = document.getElementById('screensaver');
+                screensaver.classList.add('screensaver-hidden');
+                
+                // Show content
+                // const content = document.getElementById('content');
+                // content.classList.remove('content-hidden');
+
+                // Start rendering and auto-refresh
+                await renderCurrentMatch();
+                //refreshInterval = setInterval(renderCurrentMatch, 5000);
+            }
+
             async function renderCurrentMatch() {
                 try {
-                    // Fetch all matches (quals)
-                    //const data = await getData('qualmatches');
-                    
-                    // if (!data || data.length === 0) {
-                    //     document.getElementById('status-message').innerHTML = 'No matches found.';
-                    //     return;
-                    // }
-
                     // Find the last completed match or first incomplete match
                     let currentMatch = await getLastMatch();
                     console.log('Current Match Data:', currentMatch);
-                    // for (let i = data.length - 1; i >= 0; i--) {
-                    //     if (data[i].match_num && data[i].red1) {
-                    //         currentMatch = data[i];
-                    //         break;
-                    //     }
-                    // }
 
                     if (!currentMatch) {
                         document.getElementById('status-message').innerHTML = 'No current match available.';
                         return;
                     }
 
+                    // Reset animation classes to trigger them again
+                    const matchInfo = document.getElementById('match-info');
+                    const redAlliance = document.getElementById('red-alliance');
+                    const blueAlliance = document.getElementById('blue-alliance');
+                    const statusMessage = document.getElementById('status-message');
+                    
+                    matchInfo.classList.remove('match-info-reveal');
+                    redAlliance.classList.remove('alliance-card-reveal', 'red-alliance-reveal');
+                    blueAlliance.classList.remove('alliance-card-reveal', 'blue-alliance-reveal');
+                    statusMessage.classList.remove('status-message-reveal');
+
+                    // Trigger reflow to restart animations
+                    void matchInfo.offsetWidth;
+
                     // Extract match number from match_num (e.g., "Q1" -> "1")
-                    const matchNum = currentMatch[0] ;//.replace(/^Q/, '');
+                    const matchNum = currentMatch[0];
                     
                     // Display match information
                     document.getElementById('match-number').innerHTML = `Match ${matchNum}`;
@@ -118,12 +262,24 @@
                     // Display scores
                     const redScore = parseInt(currentMatch[6] || 0);
                     const blueScore = parseInt(currentMatch[7] || 0);
-                    document.getElementById('red-score').innerHTML = redScore;
-                    document.getElementById('blue-score').innerHTML = blueScore;
+                    //document.getElementById('red-score').innerHTML = redScore;
+                    //document.getElementById('blue-score').innerHTML = blueScore;
 
                     // Update top score bar
                     document.getElementById('topRed').innerHTML = redScore;
                     document.getElementById('topBlue').innerHTML = blueScore;
+
+                    // Add glow animation to scores
+                    if (redScore > 0 || blueScore > 0) {
+                        //document.getElementById('red-score').classList.add('score-glow');
+                        //document.getElementById('blue-score').classList.add('score-glow');
+                    }
+
+                    // Re-apply animation classes to trigger them
+                    matchInfo.classList.add('match-info-reveal');
+                    redAlliance.classList.add('alliance-card-reveal', 'red-alliance-reveal');
+                    blueAlliance.classList.add('alliance-card-reveal', 'blue-alliance-reveal');
+                    statusMessage.classList.add('status-message-reveal');
 
                     // Set status message
                     if (redScore > 0 || blueScore > 0) {
@@ -137,9 +293,6 @@
                     console.error('Error:', error);
                 }
             }
-
-            // Refresh every 5 seconds to show live updates
-            setInterval(renderCurrentMatch, 5000);
         </script>
     </body>
 </html>

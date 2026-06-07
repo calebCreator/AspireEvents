@@ -215,6 +215,7 @@
     <div id="result" class="result" hidden>
       <strong>Saved Score:</strong>
       <p id="summary"></p>
+      <p id="pastMatches" style="color:inherit; font-size:0.9em; white-space:pre-wrap;"></p>
     </div>
   </div>
 
@@ -236,11 +237,37 @@
       ].reduce((sum, id) => sum + (parseInt(document.getElementById(id)?.value, 10) || 0), 0);
 
 
-      summary.textContent = `${alliance ? alliance.toUpperCase() + ' Alliance - ' : ''}Total points: ${points} - RP Earned: ${(meteorRPButton?.classList.contains('active') ? 'Meteor Shower,' : '')} ${(document.getElementById('rpHoard').classList.contains('active') ? 'Hoard,' : '')} ${(document.getElementById('rpGolden').classList.contains('active') ? 'Gilded' : '')} ${(!meteorRPButton?.classList.contains('active') && !document.getElementById('rpHoard').classList.contains('active') && !document.getElementById('rpGolden').classList.contains('active')) ? 'None' : ''}`;
+       matchData= `${alliance ? alliance.toUpperCase() + ' Alliance - ' : ''}Total points: ${points} - RP Earned: ${(meteorRPButton?.classList.contains('active') ? 'Meteor Shower,' : '')} ${(document.getElementById('rpHoard').classList.contains('active') ? 'Hoard,' : '')} ${(document.getElementById('rpGolden').classList.contains('active') ? 'Gilded' : '')} ${(!meteorRPButton?.classList.contains('active') && !document.getElementById('rpHoard').classList.contains('active') && !document.getElementById('rpGolden').classList.contains('active')) ? 'None' : ''}`;
+      
+      //Store matchData in localStorage in an array of past matches
+      const pastMatches = JSON.parse(localStorage.getItem('pastMatches') || '[]');
+      pastMatches.push(matchData);
+      localStorage.setItem('pastMatches', JSON.stringify(pastMatches));
+
+        //Past matches are the same color as the bg text so are hidden untill highlighted by hovering over the summary
+        
+      summary.textContent = matchData;
+      document.getElementById('pastMatches').textContent = "Past Matches:\n" +  pastMatches.slice(-5).reverse().join('\n');
       result.hidden = false;
       form.reset();
+
+      
+
+
       if (typeof resetCounters === 'function') resetCounters();
-      if (typeof initCounters === 'function') initCounters();
+
+      //Set correct color for alliance select after reset
+      if (localStorage.getItem('refereeColor')) {
+        const color = localStorage.getItem('refereeColor');
+        const allianceSelect = document.getElementById('alliance');
+        allianceSelect.value = color;
+        const allianceLabel = document.getElementById('alliance');
+        if (allianceLabel) {
+          allianceLabel.classList.remove('alliance-red', 'alliance-blue');
+          if (color === 'red') allianceLabel.classList.add('alliance-red');
+          else if (color === 'blue') allianceLabel.classList.add('alliance-blue');
+        }
+      }
     });
 
     form.addEventListener('change', function(event) {
@@ -354,6 +381,10 @@
       if (totalPoints) {
         totalPoints.textContent = computeTotalScore();
       }
+
+      localStorage.setItem('totalScore' + localStorage.getItem('refereeColor'), totalPoints ? totalPoints.textContent : '0');
+
+      console.log('Local storage: ' + localStorage.getItem('totalScore' + localStorage.getItem('refereeColor')));
       updateRankingIndicators();
     }
 

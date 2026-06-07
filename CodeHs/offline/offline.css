@@ -138,3 +138,18 @@ button[type="submit"]:hover{ background:var(--primary-strong); }
   .counter{ gap:10px; padding:12px; }
   .counter button{ width:44px; height:44px; }
 }
+
+#summary {
+    color:inherit;
+    font-size:1.9em;
+    white-space:pre-wrap;
+    font-weight:700;
+}
+
+
+.inline-controls input[type="checkbox"]{
+    width:40px;
+    height:40px;
+    background:var(--primary);
+    border-radius:10px;
+}

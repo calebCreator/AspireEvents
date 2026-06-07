@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scoreboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .scoreboard {
+            display: flex;
+            gap: 60px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .team-name {
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .red .team-name {
+            color: #ff4444;
+        }
+        
+        .blue .team-name {
+            color: #4488ff;
+        }
+        
+        .score {
+            font-size: 200px;
+            font-weight: bold;
+            line-height: 1;
+            min-width: 250px;
+            text-align: center;
+        }
+        
+        .red .score {
+            color: #ff4444;
+        }
+        
+        .blue .score {
+            color: #4488ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="scoreboard">
+        <div class="team red">
+            <div class="team-name">Red</div>
+            <div class="score" id="redScore">0</div>
+        </div>
+        <div class="team blue">
+            <div class="team-name">Blue</div>
+            <div class="score" id="blueScore">0</div>
+        </div>
+    </div>
+
+    <script>
+        function updateScores() {
+            document.getElementById('redScore').textContent = localStorage.getItem('totalScorered')  || 0;
+            document.getElementById('blueScore').textContent = localStorage.getItem('totalScoreblue')  || 0;
+        }
+
+        // Update scores on page load
+        updateScores();
+
+        // Listen for storage changes (updates from other tabs/windows)
+        window.addEventListener('storage', updateScores);
+
+        // Poll for changes every 500ms as backup
+        setInterval(updateScores, 500);
+    </script>
+</body>
+</html>
