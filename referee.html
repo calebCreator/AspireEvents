@@ -259,7 +259,8 @@
     }
 
     // Check on load
-    checkExpiry();
+    //checkExpiry();
+    refreshActivity();
 
     // Reset timer on any user interaction
     ['click', 'keydown', 'touchstart', 'mousemove'].forEach(evt =>

@@ -116,7 +116,7 @@
 
     <script>
         // Expiry: 12 hours of inactivity
-        const EXPIRY_MS = 12 * 60 * 60 * 1000;
+        const EXPIRY_MS = 5000;//12 * 60 * 60 * 1000;
         const LAST_ACTIVE_KEY = 'lastActiveTime';
 
         function refreshActivity() {
@@ -124,28 +124,29 @@
         }
 
         function checkExpiry() {
-        const last = parseInt(localStorage.getItem(LAST_ACTIVE_KEY) || '0', 10);
-        if (last && Date.now() - last > EXPIRY_MS) {
-            expirePage();
-        } else {
-            refreshActivity();
-        }
+            const last = parseInt(localStorage.getItem(LAST_ACTIVE_KEY) || '0', 10);
+            if (last && Date.now() - last > EXPIRY_MS) {
+                expirePage();
+            } else {
+                refreshActivity();
+            }
         }
 
         function expirePage() {
-        document.body.innerHTML = `
-            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;text-align:center;">
-            <h1>Session Expired</h1>
-            <p>This page has been inactive for more than 12 hours.</p>
-            <button onclick="location.reload()" style="padding:10px 20px;font-size:1em;cursor:pointer;">Reload</button>
-            </div>`;
-        localStorage.removeItem(LAST_ACTIVE_KEY);
-        localStorage.removeItem('pastMatches');
-        localStorage.removeItem('refereeColor');
+            document.body.innerHTML = `
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;text-align:center;">
+                <h1>Session Expired</h1>
+                <p>This page has been inactive for more than 12 hours.</p>
+                <button onclick="location.reload()" style="padding:10px 20px;font-size:1em;cursor:pointer;">Reload</button>
+                </div>`;
+            localStorage.removeItem(LAST_ACTIVE_KEY);
+            localStorage.removeItem('pastMatches');
+            localStorage.removeItem('refereeColor');
         }
 
         // Check on load
-        checkExpiry();
+        //checkExpiry();
+        refreshActivity();
 
         // Reset timer on any user interaction
         ['click', 'keydown', 'touchstart', 'mousemove'].forEach(evt =>
@@ -154,6 +155,7 @@
 
         // Also check periodically (every 5 minutes) in case the tab is left open
         setInterval(checkExpiry, 5 * 60 * 1000);
+
         async function updateScores() {
             var scores = await getScoreboardData();
             document.getElementById('redScore').textContent = scores['red'] || 0;
