@@ -115,12 +115,34 @@
     </div>
 
     <script>
-        // Expiry: 12 hours of inactivity
-        const EXPIRY_MS = 12 * 60 * 60 * 1000;
+        // --- Tracked intervals and listeners ---
+        const _intervals = [];
+        const _listeners = [];
+
+        function addTrackedInterval(fn, ms) {
+            const id = setInterval(fn, ms);
+            _intervals.push(id);
+            return id;
+        }
+
+        function addTrackedListener(target, evt, fn, opts) {
+            target.addEventListener(evt, fn, opts);
+            _listeners.push({ target, evt, fn });
+        }
+
+        function cleanup() {
+            _intervals.forEach(id => clearInterval(id));
+            _listeners.forEach(({ target, evt, fn }) => target.removeEventListener(evt, fn));
+            _intervals.length = 0;
+            _listeners.length = 0;
+        }
+
+        // --- Expiry ---
+        const EXPIRY_MS = 10000;//12 * 60 * 60 * 1000;
         const LAST_ACTIVE_KEY = 'lastActiveTime';
 
         function refreshActivity() {
-        localStorage.setItem(LAST_ACTIVE_KEY, Date.now().toString());
+            localStorage.setItem(LAST_ACTIVE_KEY, Date.now().toString());
         }
 
         function checkExpiry() {
@@ -128,11 +150,12 @@
             if (last && Date.now() - last > EXPIRY_MS) {
                 expirePage();
             } else {
-                refreshActivity();
+                //refreshActivity();
             }
         }
 
         function expirePage() {
+            cleanup();
             document.body.innerHTML = `
                 <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;text-align:center;">
                 <h1>Session Expired</h1>
@@ -145,17 +168,17 @@
         }
 
         // Check on load
-        //checkExpiry();
         refreshActivity();
 
         // Reset timer on any user interaction
         ['click', 'keydown', 'touchstart', 'mousemove'].forEach(evt =>
-        document.addEventListener(evt, refreshActivity, { passive: true })
+            addTrackedListener(document, evt, refreshActivity, { passive: true })
         );
 
-        // Also check periodically (every 5 minutes) in case the tab is left open
-        setInterval(checkExpiry, 5 * 60 * 1000);
+        // Check expiry every 5 minutes
+        addTrackedInterval(checkExpiry,/* 5 * 60 * */1000);
 
+        // --- Scoreboard logic ---
         async function updateScores() {
             var scores = await getScoreboardData();
             document.getElementById('redScore').textContent = scores['red'] || 0;
@@ -176,19 +199,18 @@
         // Update scores on page load
         updateScores();
         updateTeams();
-        //Reset both scores to 0 on load to prevent stale data
+        // Reset both scores to 0 on load to prevent stale data
         sendScoreboardData('red', '0');
         sendScoreboardData('blue', '0');
 
         // Listen for storage changes (updates from other tabs/windows)
-        window.addEventListener('storage', updateScores);
+        addTrackedListener(window, 'storage', updateScores);
 
         // Poll for changes every 3 seconds as backup
-        setInterval(updateScores, 3000);
+        addTrackedInterval(updateScores, 3000);
 
-        setInterval(updateTeams, 10000); // Update team names every 10 seconds
+        // Update team names every 10 seconds
+        addTrackedInterval(updateTeams, 10000);
     </script>
 </body>
 </html>
-
-
