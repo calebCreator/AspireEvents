@@ -142,10 +142,10 @@
         // Listen for storage changes (updates from other tabs/windows)
         window.addEventListener('storage', updateScores);
 
-        // Poll for changes every 500ms as backup
-        setInterval(updateScores, 500);
+        // Poll for changes every 3 seconds as backup
+        setInterval(updateScores, 3000);
 
-        setInterval(updateTeams, 5000); // Update team names every 5 seconds
+        setInterval(updateTeams, 10000); // Update team names every 10 seconds
     </script>
 </body>
 </html>
