@@ -24,7 +24,7 @@
         
         .scoreboard {
             display: flex;
-            gap: 60px;
+            gap: 0px;
             justify-content: center;
             align-items: center;
         }
@@ -67,17 +67,50 @@
         .blue .score {
             color: #4488ff;
         }
+
+        .side-teams {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .side-team {
+            font-size: 48px;
+            font-weight: bold;
+        }
+        .match-id {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            font-weight: bold;
+            color: white;
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 <body>
     <div class="scoreboard">
+        <div class="side-teams red-teams">
+            <span class="side-team" style="color:#ff4444;" id="red1">—</span>
+            <span class="side-team" style="color:#ff4444;" id="red2">—</span>
+        </div>
         <div class="team red">
             <div class="team-name">Red</div>
             <div class="score" id="redScore">0</div>
         </div>
+        <div class="match-id">
+            <span id="matchId">Q1</span>
+        </div>
         <div class="team blue">
             <div class="team-name">Blue</div>
             <div class="score" id="blueScore">0</div>
+        </div>
+        <div class="side-teams blue-teams">
+            <span class="side-team" style="color:#4488ff;" id="blue1">—</span>
+            <span class="side-team" style="color:#4488ff;" id="blue2">—</span>
         </div>
     </div>
 
@@ -88,8 +121,20 @@
             document.getElementById('blueScore').textContent = scores['blue'] || 0;
         }
 
+        async function updateTeams() {
+            var curMatch = await getCurrentMatch();
+            if (curMatch) {
+                document.getElementById('red1').textContent = curMatch[2];
+                document.getElementById('red2').textContent = curMatch[3];
+                document.getElementById('blue1').textContent = curMatch[4];
+                document.getElementById('blue2').textContent = curMatch[5];
+                document.getElementById('matchId').textContent = curMatch[0];
+            }
+        }
+
         // Update scores on page load
         updateScores();
+        updateTeams();
         //Reset both scores to 0 on load to prevent stale data
         sendScoreboardData('red', '0');
         sendScoreboardData('blue', '0');
@@ -99,6 +144,10 @@
 
         // Poll for changes every 500ms as backup
         setInterval(updateScores, 500);
+
+        setInterval(updateTeams, 5000); // Update team names every 5 seconds
     </script>
 </body>
 </html>
+
+
