@@ -107,7 +107,10 @@ function genSchedule(matches, teamz){
                 teams.splice(index, 1);
             }else{
                 //If all the teams have played
-                teams = TEAMS.slice();
+
+                //Put the teams that are not in the match back in the pool
+                teams = teams.concat(TEAMS.filter(team => !teamsInMatch.includes(team)));
+            
             }
         }
         
