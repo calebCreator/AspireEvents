@@ -155,6 +155,8 @@ function getUniqueTeams(matches){
         }
 
     }
+    //Remove any teams that contain the text "(surrogate)" since those are surrogate teams and should not be included in the rankings
+    teams = teams.filter(team => !team.includes("(surrogate)"));
     return teams;
 }
 
