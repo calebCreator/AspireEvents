@@ -85,8 +85,8 @@ async function submitMatch() {
     const red2 = document.getElementById('red2').value.trim();
     const blue1 = document.getElementById('blue1').value.trim();
     const blue2 = document.getElementById('blue2').value.trim();
-    const redScore = document.getElementById('redScore').value;
-    const blueScore = document.getElementById('blueScore').value;
+    const redScore = Number(document.getElementById('redScore').value);
+    const blueScore = Number(document.getElementById('blueScore').value);
     const redRP1 = document.getElementById('redRP1').checked;
     const redRP2 = document.getElementById('redRP2').checked;
     const redRP3 = document.getElementById('redRP3').checked;
