@@ -131,11 +131,26 @@
                 opacity: 0;
                 pointer-events: none;
             }
+            .winner-banner {
+                position: absolute;
+                top: -48px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #FFD600;
+                color: #7B5800;
+                font-weight: bold;
+                font-size: 45px;
+                padding: 4px 18px;
+                border-radius: 6px;
+                white-space: nowrap;
+                border: 1.5px solid #F9A825;
+                z-index: 2;
+            }
         </style>
         <script src="main.js"></script>
     </head>
 
-    <body onload="initializeScreen();">
+    <body onload="renderCurrentMatch(); setInterval(renderCurrentMatch, 20000); revealScore();">
         <!-- Screensaver Overlay -->
         <div id="screensaver" class="screensaver-overlay">
             <div class="screensaver-icon">🎮</div>
@@ -259,34 +274,65 @@
                     document.getElementById('blue1').innerHTML = currentMatch[4] || '-';
                     document.getElementById('blue2').innerHTML = currentMatch[5] || '-';
 
-                    // Display scores
-                    const redScore = parseInt(currentMatch[6] || 0);
-                    const blueScore = parseInt(currentMatch[7] || 0);
-                    //document.getElementById('red-score').innerHTML = redScore;
-                    //document.getElementById('blue-score').innerHTML = blueScore;
+                    // // Display scores
+                    // const redScore = parseInt(currentMatch[6] || 0);
+                    // const blueScore = parseInt(currentMatch[7] || 0);
+                    // //document.getElementById('red-score').innerHTML = redScore;
+                    // //document.getElementById('blue-score').innerHTML = blueScore;
 
-                    // Update top score bar
-                    document.getElementById('topRed').innerHTML = redScore;
-                    document.getElementById('topBlue').innerHTML = blueScore;
+                    // // Update top score bar
+                    // document.getElementById('topRed').innerHTML = redScore;
+                    // document.getElementById('topBlue').innerHTML = blueScore;
 
-                    // Add glow animation to scores
-                    if (redScore > 0 || blueScore > 0) {
-                        //document.getElementById('red-score').classList.add('score-glow');
-                        //document.getElementById('blue-score').classList.add('score-glow');
-                    }
+                    // // Add glow animation to scores
+                    // if (redScore > 0 || blueScore > 0) {
+                    //     //document.getElementById('red-score').classList.add('score-glow');
+                    //     //document.getElementById('blue-score').classList.add('score-glow');
+                    // }
 
-                    // Re-apply animation classes to trigger them
-                    matchInfo.classList.add('match-info-reveal');
-                    redAlliance.classList.add('alliance-card-reveal', 'red-alliance-reveal');
-                    blueAlliance.classList.add('alliance-card-reveal', 'blue-alliance-reveal');
-                    statusMessage.classList.add('status-message-reveal');
+                    // // Re-apply animation classes to trigger them
+                    // matchInfo.classList.add('match-info-reveal');
+                    // redAlliance.classList.add('alliance-card-reveal', 'red-alliance-reveal');
+                    // blueAlliance.classList.add('alliance-card-reveal', 'blue-alliance-reveal');
+                    // statusMessage.classList.add('status-message-reveal');
 
-                    // Set status message
-                    if (redScore > 0 || blueScore > 0) {
-                        document.getElementById('status-message').innerHTML = '✅ Match Complete';
-                    } else {
-                        document.getElementById('status-message').innerHTML = '<span class="spinner-inline"></span>Awaiting scores...';
-                    }
+                    // // Set status message
+                    // if (redScore > 0 || blueScore > 0) {
+                    //     document.getElementById('status-message').innerHTML = '✅ Match Complete';
+                    // } else {
+                    //     document.getElementById('status-message').innerHTML = '<span class="spinner-inline"></span>Awaiting scores...';
+                    // }
+
+
+
+
+                        // After setting scores, determine winner and show banner
+                        const redScore = parseInt(currentMatch[6] || 0);
+                        const blueScore = parseInt(currentMatch[7] || 0);
+
+                        document.getElementById('topRed').innerHTML = redScore;
+                        document.getElementById('topBlue').innerHTML = blueScore;
+
+                        // Add/remove winner banner
+                        const redCard = document.getElementById('red-alliance');
+                        const blueCard = document.getElementById('blue-alliance');
+
+                        // Remove any existing banners first
+                        document.querySelectorAll('.winner-banner').forEach(el => el.remove());
+                        redCard.style.position = 'relative';
+                        blueCard.style.position = 'relative';
+
+                        if (redScore > 0 || blueScore > 0) {
+                            const banner = document.createElement('div');
+                            banner.className = 'winner-banner';
+                            banner.textContent = '🏆 Winner!';
+
+                            if (redScore > blueScore) {
+                                redCard.appendChild(banner);
+                            } else if (blueScore > redScore) {
+                                blueCard.appendChild(banner);
+                            }
+                        }
 
                 } catch (error) {
                     document.getElementById('status-message').innerHTML = 'Error loading match data.';
